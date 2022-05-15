@@ -1,13 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
 import SupplierContext from '../../../context/SupplierContext';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation,Link } from 'react-router-dom';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import DeleteIcon from '@mui/icons-material/Delete';
 import '../style.css';
 // import Navbar from '../Navbar';
-import { CircularProgress, Button, TextField, Typography, Breadcrumbs, Link } from '@mui/material';
+import { CircularProgress, Button, TextField, Typography, Breadcrumbs } from '@mui/material';
 
 const EditSingleSupplierTransactionForPayment = () => {
 	const location = useLocation();
@@ -88,23 +88,22 @@ const EditSingleSupplierTransactionForPayment = () => {
 				<>
 					<div>
 						<Breadcrumbs separator="›" sx={{ padding: 2 }} aria-label="breadcrumb">
-							<Link underline="hover" color="inherit" href="/suppliers">
+							<Link underline="hover" color="inherit" to="/suppliers">
 								Suppliers List
 							</Link>
 							<Link
 								underline="hover"
 								color="inherit"
-								href="/singlesupplier"
+								to="/singlesupplier"
 							>
 								{name}
 							</Link>
-							<Link
+							<span
 								underline="hover"
 								color="text.primary"
-								href="#"
 							>
 								Edit Entry
-							</Link>
+							</span>
 						</Breadcrumbs>
 						<h1>Payment of Rs {newTransaction === '' ? 0 : newTransaction} to {name}</h1>
 					</div>

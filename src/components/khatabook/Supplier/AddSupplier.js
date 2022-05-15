@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react'
+import {Link} from "react-router-dom"
 import SupplierContext from "../../../context/SupplierContext"
 import { notifyWarning } from '../../../alert';
 import 'react-phone-number-input/style.css'
 import PhoneInput, { isPossiblePhoneNumber, isValidPhoneNumber } from 'react-phone-number-input'
 // import Navbar from '../Navbar';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
 const Navbar2 = () => {
 	return (
 		<nav className="navbar navbar-expand-lg  navbar-dark bg-primary" style={{ color: "#ffffff" }
@@ -57,13 +57,13 @@ const AddSupplier = () => {
 			{/* <Navbar a="/addcustomer" b="/addsupplier" /> */}
 			<br />
 			<Breadcrumbs separator="›" sx={{ padding: 2 }} aria-label="breadcrumb">
-				<Link underline="hover" color="inherit" href="/suppliers">
+				<Link underline="hover" color="inherit" to="/suppliers">
 					Suppliers List
 				</Link>
 				<Link
 					underline="hover"
 					color="text.primary"
-					href="#"
+					to="#"
 				>
 					Add new supplier
 				</Link>

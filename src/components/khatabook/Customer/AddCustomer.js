@@ -1,11 +1,10 @@
 import React, { useState, useContext } from 'react'
-import { useHistory } from "react-router-dom";
+import { useHistory,Link } from "react-router-dom";
 import CustomerContext from "../../../context/CustomerContext"
 import { notifyWarning } from '../../../alert';
 import 'react-phone-number-input/style.css'
 import PhoneInput, { isPossiblePhoneNumber, isValidPhoneNumber } from 'react-phone-number-input'
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
 const Navbar2 = () => {
 	return (
 		<nav className="navbar navbar-expand-lg  navbar-dark bg-primary" style={{ color: "#ffffff" }}>
@@ -58,13 +57,13 @@ const AddCustomer = () => {
 			{/* <Navbar a="/addcustomer" b="/addsupplier" /> */}
 			<br />
 			<Breadcrumbs separator="›" sx={{ padding: 2 }} aria-label="breadcrumb">
-				<Link underline="hover" color="inherit" href="/customers">
+				<Link underline="hover" color="inherit" to="/customers">
 					Customers List
 				</Link>
 				<Link
 					underline="hover"
 					color="text.primary"
-					href="#"
+					to="#"
 				>
 					Add new customer
 				</Link>

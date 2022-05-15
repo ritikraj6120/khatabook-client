@@ -1,13 +1,12 @@
 import React, { useContext, useEffect } from 'react';
 import CustomerContext from '../../../context/CustomerContext';
-import { useHistory } from 'react-router-dom';
+import { useHistory,Link } from 'react-router-dom';
 import '../style.css';
 import CustomerDetail from './CustomerDetail';
 // import Navbar from '../Navbar';
 import { Typography, Button, CircularProgress, Table, TableRow, TableHead, TableBody, TableCell, CardContent, Card } from '@mui/material';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -73,13 +72,13 @@ const SingleCustomer = () => {
 						<Grid container spacing={2} sx={{}}>
 							<Grid item xs={9} sx={{ overflowY: "auto", maxHeight: "90vh" }}>
 								<Breadcrumbs separator="›" sx={{ padding: 2 }} aria-label="breadcrumb">
-									<Link underline="hover" color="inherit" href="/customers">
+									<Link underline="hover" color="inherit" to="/customers">
 										Customers List
 									</Link>
 									<Link
 										underline="hover"
 										color="text.primary"
-										href="#"
+										to="#"
 									>
 										{singleCustomer.name}
 									</Link>

@@ -1,13 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
 import SupplierContext from '../../../context/SupplierContext';
-import { useHistory } from 'react-router-dom';
+import { useHistory,Link } from 'react-router-dom';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import '../style.css';
 // import CustomerDetail from './CustomerDetail';
 // import Navbar from '../Navbar';
-import { CircularProgress, Button, TextField, Typography, Breadcrumbs, Link } from '@mui/material';
+import { CircularProgress, Button, TextField, Typography, Breadcrumbs } from '@mui/material';
 // import { CommentsDisabledOutlined, ConstructionOutlined } from '@mui/icons-material';
 const AddNewTransactionForSupplierPayment = () => {
 	const errorStateinit = {
@@ -65,20 +65,20 @@ const AddNewTransactionForSupplierPayment = () => {
 				<>
 					<div>
 						<Breadcrumbs separator="›" sx={{ padding: 2 }} aria-label="breadcrumb">
-							<Link underline="hover" color="inherit" href="/suppliers">
+							<Link underline="hover" color="inherit" to="/suppliers">
 								Customers List
 							</Link>
 							<Link
 								underline="hover"
 								color="inherit"
-								href="/singlesupplier"
+								to="/singlesupplier"
 							>
 								{singleSupplier.name}
 							</Link>
 							<Link
 								underline="hover"
 								color="text.primary"
-								href="#"
+								to="#"
 							>
 								Your Payment
 							</Link>

@@ -231,7 +231,10 @@ const SingleCustomerReport = () => {
 
 								<Button variant="outlined" onClick={() => generatePDF(singleSupplier, SingleSupplierTransaction)} size="large" style={{ marginRight: "1rem" }} startIcon={<PictureAsPdfOutlinedIcon />}>  Download  </Button>
 
-								<Button style={{ backgroundColor: "#0b3fd0" }} size="large" variant="contained" startIcon={<ShareOutlinedIcon />}> <Link to={{ pathname: x }} style={{ textDecoration: 'none', color: "white" }} target="_blank">Share </Link></Button>
+								<Button style={{ backgroundColor: "#0b3fd0" }} size="large" variant="contained" startIcon={<ShareOutlinedIcon />}>
+									Share
+									{/* <Link to={{ pathname: x }} style={{ textDecoration: 'none', color: "white" }} target="_blank">Share </Link> */}
+								</Button>
 							</CardContent>
 						</Card>
 					</>

@@ -1,13 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import CustomerContext from '../../../context/CustomerContext';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import DeleteIcon from '@mui/icons-material/Delete';
 import '../style.css';
-import { Breadcrumbs, Link } from '@mui/material';
-// import Navbar from '../Navbar';
+import { Breadcrumbs } from '@mui/material';
 import { CircularProgress, Button, TextField, Typography } from '@mui/material';
 const EditSingleCustomerTransactionForGaveAmount = () => {
 	const location = useLocation();
@@ -93,23 +92,22 @@ const EditSingleCustomerTransactionForGaveAmount = () => {
 				<>
 					<div>
 						<Breadcrumbs separator="›" sx={{ padding: 2 }} aria-label="breadcrumb">
-							<Link underline="hover" color="inherit" href="/custmers">
+							<Link underline="hover" color="inherit" to="/custmers">
 								Customers List
 							</Link>
 							<Link
 								underline="hover"
 								color="inherit"
-								href="/singlecustomer"
+								to="/singlecustomer"
 							>
 								{name}
 							</Link>
-							<Link
+							<span
 								underline="hover"
 								color="text.primary"
-								href="#"
 							>
 								Edit Entry
-							</Link>
+							</span>
 						</Breadcrumbs>
 						<h1>You gave Rs {newTransaction === '' ? 0 : newTransaction} to {name}</h1>
 					</div>

@@ -1,15 +1,12 @@
 import React, { useContext, useEffect } from 'react';
 import SupplierContext from '../../../context/SupplierContext';
-import { useHistory } from 'react-router-dom';
+import { useHistory,Link } from 'react-router-dom';
 import '../style.css';
 import SupplierDetail from './SupplierDetail';
-// import Navbar from '../Navbar';
-import { Typography, Button, CircularProgress, Table, TableRow, TableHead, TableBody, TableCell, CardContent, Card } from '@mui/material';
+import { Typography, Button, CircularProgress, Table, TableRow, TableHead, TableBody, TableCell, } from '@mui/material';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 
@@ -70,13 +67,13 @@ const SingleSupplier = () => {
 						<Grid container spacing={2} sx={{}}>
 							<Grid item xs={9} sx={{ overflowY: "auto", maxHeight: "90vh" }}>
 								<Breadcrumbs separator="›" sx={{ padding: 2 }} aria-label="breadcrumb">
-									<Link underline="hover" color="inherit" href="/suppliers">
+									<Link underline="hover" color="inherit" to="/suppliers">
 										Suppliers List
 									</Link>
 									<Link
 										underline="hover"
 										color="text.primary"
-										href="#"
+										to="#"
 									>
 										{singleSupplier.name}
 									</Link>

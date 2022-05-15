@@ -29,7 +29,7 @@ const SingleCustomerReport = () => {
 			yougot += SingleCustomerTransaction[i].takeamount_singleCustomer;
 		}
 		netbalance = yougave - yougot;
-		x = `https://api.whatsapp.com/send?phone=91${singleCustomer.phone}`;
+		x = `https://api.whatsapp.com/send?phone=${singleCustomer.phone}`;
 	}
 	const month = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
 	const formatdate = (d) => {
@@ -231,7 +231,10 @@ const SingleCustomerReport = () => {
 
 								<Button variant="outlined" onClick={() => generatePDF(singleCustomer, SingleCustomerTransaction)} size="large" style={{ marginRight: "1rem" }} startIcon={<PictureAsPdfOutlinedIcon sx={{ fontSize: "1.25rem" }} />}>  Download  </Button>
 
-								<Button style={{ backgroundColor: "#0b3fd0" }} size="large" variant="contained" startIcon={<ShareOutlinedIcon />}> <Link to={{ pathname: x }} style={{ textDecoration: 'none', color: "white" }} target="_blank">Share </Link></Button>
+								<Button style={{ backgroundColor: "#0b3fd0" }} size="large" variant="contained" startIcon={<ShareOutlinedIcon />}>
+									Share
+									{/* <Link to={{ pathname: x }} style={{ textDecoration: 'none', color: "white" }} target="_blank">Share </Link> */}
+								</Button>
 							</CardContent>
 						</Card>
 					</>
