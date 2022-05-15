@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { notifySuccess, notifyError, notifyWarning, notifyUnAuthorized } from "../alert.js"
 const NoteState = (props) => {
 	let history = useHistory();
-	const host = "http://localhost:5000"
+	const host = "https://khatabook-app.herokuapp.com"
 	const notesInitial = []
 	const [notes, setNotes] = useState(notesInitial)
 

@@ -38,7 +38,7 @@ const SupplierState = (props) => {
 		});
 	}
 	let history = useHistory();
-	const host = "http://localhost:5000";
+	const host = "https://khatabook-app.herokuapp.com"
 	const [suppliers, setSuppliers] = useState([])
 	const [SingleSupplierTransaction, setSingleSupplierTransaction] = useState([]);
 	const [SingleTransactionOfParticularSupplier, setSingleTransactionOfParticularSupplier] = useState({});

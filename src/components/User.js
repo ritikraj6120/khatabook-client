@@ -8,10 +8,10 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { TextField, Divider, Paper } from '@mui/material';
-import { toast } from 'react-toastify';
+import { notifyWarning } from '../alert';
 const User = () => {
 	let history = useHistory();
-	const { UserDetail, getUser } = useContext(UserContext);
+	const { UserDetail, getUser, changePassword } = useContext(UserContext);
 	useEffect(() => {
 		if (localStorage.getItem('token'))
 			getUser()
@@ -22,30 +22,6 @@ const User = () => {
 		// eslint-disable-next-line
 	}, [])
 
-	const notifySuccess = (x) => {
-		toast.success(x, {
-			autoClose: 3000,
-			position: "top-center",
-		});
-	}
-	const notifyError = (x) => {
-		toast.error(x, {
-			autoClose: 3000,
-			position: "top-right",
-		});
-	}
-	const notifyWarning = (x) => {
-		toast.warn(x, {
-			autoClose: 3000,
-			position: "top-center",
-		})
-	}
-	const notifyUnAuthorized = (x) => {
-		toast.error(x, {
-			autoClose: 500,
-			position: "top-center",
-		});
-	}
 	const [passwords, setPasswords] = useState({ currentPassword: "", newPassword: "" })
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -59,32 +35,10 @@ const User = () => {
 			notifyWarning("New Password is same as Old Password");
 			return;
 		}
-		const response = await fetch("http://localhost:5000/api/auth/changepassword", {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				"auth-token": localStorage.getItem('token')
-			},
-			body: JSON.stringify(user)
-		});
-		// const response = { status: 200 };
-		if (response.status === 200) {
+		const status = await changePassword(user);
+		if (status === 200) {
 			setPasswords({ currentPassword: "", newPassword: "" })
-			notifySuccess("successfully Updated Password");
 		}
-		else if (response.status === 400) {
-			notifyWarning("Current Password not correctly entered");
-		}
-		else if (response.status === 401) {
-			notifyUnAuthorized("Not Authorized");
-			localStorage.clear();
-			setTimeout(function () { history.push('/login') }, 1000);
-		}
-		else {
-			notifyError("Some Error happenend");
-		}
-
-
 
 	};
 	return (

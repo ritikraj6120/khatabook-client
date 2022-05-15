@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { toast } from 'react-toastify';
 const CustomerState = (props) => {
 	let history = useHistory();
-	const host = "http://localhost:5000";
+	const host = "https://khatabook-app.herokuapp.com"
 	const [customers, setCustomers] = useState([])
 	const [SingleCustomerTransaction, setSingleCustomerTransaction] = useState([]);
 	const [CustomerTransactions, setCustomerTransactions] = useState([]);
