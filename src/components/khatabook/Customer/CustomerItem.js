@@ -26,7 +26,7 @@ const CustomerItem = (props) => {
 		<>
 			<button className="btn btn-outline-dark" onClick={edit}>
 				<div className="d-flex bd-highlight">
-					<Avatar sx={{ bgcolor: "#186fd9", width: 40, height: 40, marginLeft: "8vw", fontSize: 16 }}>
+					<Avatar sx={{ bgcolor: "#186fd9", width: 40, height: 40, marginLeft: "1vw", fontSize: 16 }}>
 						{stringAvatar(name)}
 					</Avatar>
 					<div className="p-2  bd-highlight">{title}</div>

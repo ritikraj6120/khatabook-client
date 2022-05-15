@@ -1,18 +1,13 @@
 import NoteContext from "./noteContext";
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import UserContext from "./UserContext";
+import { useState,useContext } from "react";
 import { notifySuccess, notifyError, notifyWarning, notifyUnAuthorized } from "../alert.js"
 const NoteState = (props) => {
-	let history = useHistory();
 	const host = "https://khatabook-app.herokuapp.com"
 	const notesInitial = []
 	const [notes, setNotes] = useState(notesInitial)
 
-	const handleLogout = () => {
-		localStorage.clear();
-		localStorage.clear();
-		setTimeout(function () { history.push('/login') }, 1000);
-	}
+	const { handleLogout } = useContext(UserContext)
 
 	// Get all Notes
 	const getNotes = async () => {

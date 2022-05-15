@@ -53,6 +53,7 @@ const CustomerDetail = (props) => {
 
 	const youGaveAddPage = (e) => {
 		history.push('/addNewTransactionForCustomerGave');
+		console.log("meraaaaa");
 	}
 
 	const youGetAddPage = (e) => {

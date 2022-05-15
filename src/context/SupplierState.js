@@ -1,17 +1,10 @@
 import SupplierContext from "./SupplierContext";
-import noteContext from "./noteContext";
+import UserContext from "./UserContext";
 import { useState, useContext, useReducer } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from 'react-toastify';
 const SupplierState = (props) => {
-	const { showAlert } = useContext(noteContext)
-
-
-	const handleLogout = () => {
-		localStorage.clear();
-		localStorage.clear();
-		setTimeout(function () { history.push('/login') }, 1000);
-	}
+	const { handleLogout } = useContext(UserContext)
 
 	const notifySuccess = (x) => {
 		toast.success(x, {
@@ -145,8 +138,9 @@ const SupplierState = (props) => {
 			const supplier = await response.json();
 			setSuppliers(suppliers.concat(supplier))
 			localStorage.setItem("SingleSupplierId", JSON.stringify(supplier._id))
-			notifySuccess("Customer Added Succcessfully")
-			setTimeout(function () { history.push('/singlecustomer') }, 1000);
+			notifySuccess("Supplier Added Succcessfully")
+			// setTimeout(function () { history.push('/singlesupplier') }, 1000);
+			history.push('/singlesupplier')
 		}
 		else {
 			notifyError("Some Error happenend ");
@@ -299,14 +293,14 @@ const SupplierState = (props) => {
 		else if (response.status === 200) {
 			const newSuppliertransaction = await response.json();
 			setSingleSupplierTransaction(SingleSupplierTransaction.concat(newSuppliertransaction));
-			notifySuccess("Supplier Transaction Added Succcessfully", "success")
+			notifySuccess("Supplier Transaction Added Succcessfully")
 		}
 		else {
 			notifyError("Some Error happenend at Server side");
 		}
 	}
 
-	//Update an existing customerTransaction  using: PUT "/api/customer/updatetransactions/" function no 8
+	//Update an existing supplierTransaction  using: PUT "/api/supplier/updatetransactions/" function no 8
 	const updateSupplierTransaction = async (transactionid, singlesupplierid, purchase_singleSupplier, payment_singleSupplier, billdetails, billNo, date) => {
 		try {
 			const response = await fetch(`${host}/api/supplier/updateSupplierTransaction/${transactionid}`, {
@@ -319,10 +313,6 @@ const SupplierState = (props) => {
 				body: JSON.stringify({ purchase_singleSupplier, payment_singleSupplier, billdetails, billNo, date })
 			});
 			if (response.status === 200) {
-				// const newCustomerTransaction = {};
-				// if (date) { newCustomerTransaction.date = date };
-				// if (lendamount) { newCustomerTransaction.lendamount = lendamount };
-				// if (takeamount) { newCustomerTransaction.takeamount = takeamount };
 				// Logic to edit in client
 				for (let index = 0; index < SingleSupplierTransaction.length; index++) {
 					const element = SingleSupplierTransaction[index];
@@ -341,7 +331,7 @@ const SupplierState = (props) => {
 					}
 				}
 				setSingleSupplierTransaction(SingleSupplierTransaction)
-				showAlert("Supplier Transaction  Updated Succcessfully", "success")
+				notifySuccess("Supplier Transaction  Updated Succcessfully")
 				history.push('/singlesupplier');
 			}
 			else if (response.status === 400 || response.status === 401) {

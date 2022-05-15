@@ -1,6 +1,6 @@
 import CustomerContext from "./CustomerContext";
-// import axios from 'axios';
-import { useState, useReducer } from "react";
+import UserContext from "./UserContext";
+import { useState, useReducer, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from 'react-toastify';
 const CustomerState = (props) => {
@@ -10,11 +10,8 @@ const CustomerState = (props) => {
 	const [SingleCustomerTransaction, setSingleCustomerTransaction] = useState([]);
 	const [CustomerTransactions, setCustomerTransactions] = useState([]);
 	const [SingleTransactionOfParticularCustomer, setSingleTransactionOfParticularCustomer] = useState({});
+	const { handleLogout } = useContext(UserContext)
 
-	const handleLogout = () => {
-		localStorage.clear();
-		setTimeout(function () { history.push('/login') }, 1000);
-	}
 	const notifySuccess = (x) => {
 		toast.success(x, {
 			autoClose: 2000,

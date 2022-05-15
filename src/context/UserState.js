@@ -2,11 +2,13 @@ import UserContext from "./UserContext";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { notifyError, notifySuccess, notifyUnAuthorized, notifyWarning } from '../alert';
+import { withRouter } from 'react-router-dom'
 const UserState = (props) => {
 	let history = useHistory();
 	const host = "https://khatabook-app.herokuapp.com"
 	const UserInitial = {};
 	const [UserDetail, setUserDetail] = useState(UserInitial)
+	const [userloggedin, setUserloggedin] = useState(false);
 
 	const signup = async (user) => {
 		const response = await fetch(`${host}/api/auth/signup`, {
@@ -42,14 +44,20 @@ const UserState = (props) => {
 		if (json.success) {
 			// Save the auth token and redirect
 			localStorage.setItem('token', json.authtoken);
+			setUserloggedin(true);
 			notifySuccess("Successfully logged in")
-			history.push('/')
+			history.push("/customers");
 		}
 		else {
 			notifyError(json.error);
 		}
 	}
 
+	const handleLogout = () => {
+		localStorage.clear();
+		setUserloggedin(false);
+		history.push('/login')
+	}
 	// Get User details
 	const getUser = async () => {
 		// API Call 
@@ -84,7 +92,8 @@ const UserState = (props) => {
 		else if (response.status === 401) {
 			notifyUnAuthorized("Not Authorized");
 			localStorage.clear();
-			setTimeout(function () { history.push('/login') }, 1000);
+			// setTimeout(function () { history.push('/login') }, 1000);
+			history.push('/login')
 		}
 		else {
 			notifyError("Some Error happenend");
@@ -94,10 +103,10 @@ const UserState = (props) => {
 
 
 	return (
-		<UserContext.Provider value={{ UserDetail, getUser, signup, login, changePassword }}>
+		<UserContext.Provider value={{ UserDetail, getUser, signup, login, changePassword, userloggedin, handleLogout }}>
 			{props.children}
 		</UserContext.Provider>
 	)
 
 }
-export default UserState;
+export default withRouter(UserState);

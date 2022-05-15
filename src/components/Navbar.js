@@ -1,14 +1,13 @@
 import React from 'react'
+import { useContext } from 'react';
 import { Link, useLocation, useHistory } from "react-router-dom";
+import UserContext from '../context/UserContext';
 import UserNavbar from './UserNavbar';
 import Button from '@mui/material/Button';
 
 const Navbar = () => {
 	let history = useHistory();
-	const handleLogout = () => {
-		localStorage.removeItem('token');
-		history.push('/login');
-	}
+	const { handleLogout } = useContext(UserContext)
 	let location = useLocation();
 	return (
 		<nav className="navbar navbar-expand-lg navbar-dark bg-dark">
