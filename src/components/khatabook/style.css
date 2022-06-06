@@ -1,8 +1,8 @@
 .sticky-btn {
 	background-color: rgb(194, 11, 96);
     position: fixed;
-    bottom: 3rem;
-    right: 3rem;
+    bottom: 5rem;
+    right: 10rem;
     width: 5vw;
     height: 5vw;
 		min-width: 3rem;

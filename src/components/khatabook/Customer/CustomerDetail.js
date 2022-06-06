@@ -1,6 +1,8 @@
-import React, { useContext, useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { editCustomer, deleteCustomer, getCustomerBalance } from '../../../actions/customerAction'
+import { handleLogout } from '../../../actions/userAction'
 import { useHistory, Link } from 'react-router-dom';
-import CustomerContext from '../../../context/CustomerContext'
 import { notifyWarning } from '../../../alert';
 import { Button, Typography, CardContent, Card, Divider, Grid, Avatar, IconButton, MenuItem, Menu } from '@mui/material';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
@@ -16,25 +18,26 @@ import { Box } from '@mui/system';
 
 
 const CustomerDetail = (props) => {
+	let { singleCustomer } = props;
 	let history = useHistory();
-	let { singleCustomer } = props; // db 
-	const { editCustomer, deleteCustomer, customerstate, SingleCustomerTransaction, getCustomerBalance } = useContext(CustomerContext);
-	const { customerBalance } = customerstate;
-	const result = customerBalance.filter(item => item.customer === singleCustomer._id);
-	console.log("hi ram")
-	console.log(customerBalance.length);
-	console.log(result.length);
-	console.log("helle");
+	const dispatch = useDispatch();
+	const userLoginState = useSelector(state => state.userLogin.userInfo)
+	const customerBalanceState = useSelector(state => state.getCustomerBalance)
+	const singleCustomerTransactionsState = useSelector(state => state.singleCustomerTransactions)
+	const { SingleCustomerTransaction } = singleCustomerTransactionsState
+	const { customerBalance } = customerBalanceState;
 	let x = 0;
-	if (result[0])
-		x = (result[0].amounttoget - result[0].amounttogive);
+	if (customerBalanceState.loading === false) {
+		const result = customerBalance.filter(item => item.customer === singleCustomer._id);
+		if (result[0])
+			x = (result[0].amounttoget - result[0].amounttogive);
+	}
 	const [credentials, setCredentials] = useState({ etitle: "", ename: "" })
 	const ref = useRef(null)
 	const refClose = useRef(null)
 	const [anchorEl, setAnchorEl] = useState(null);
-	const [phone, setPhone] = useState()
+	const [phone, setPhone] = useState('')
 	const open = Boolean(anchorEl);
-	let y;
 	// useEffect(() => {
 	// 	setCredentials({ etitle: singleCustomer.title, ename: singleCustomer.name });
 	// 	setPhone(singleCustomer.phone);
@@ -42,30 +45,35 @@ const CustomerDetail = (props) => {
 	// }, [singleCustomer]);
 
 	useEffect(() => {
-		getCustomerBalance();
-	}, [SingleCustomerTransaction]);
+		if (userLoginState !== null) {
+			dispatch(getCustomerBalance());
+		}
+		else {
+			dispatch(handleLogout(history));
+		}
+	}, [userLoginState, SingleCustomerTransaction])
 
-
-	console.log(y);
 	const onChange = (e) => {
 		setCredentials({ ...credentials, [e.target.name]: e.target.value })
 	}
 
 	const youGaveAddPage = (e) => {
 		history.push('/addNewTransactionForCustomerGave');
-		console.log("meraaaaa");
 	}
 
 	const youGetAddPage = (e) => {
 		history.push('/addNewTransactionForCustomerGet');
 	}
 
-	const handleUpdate = async (e) => {
+	const handleUpdate = (e) => {
 		e.preventDefault();
 		const { etitle, ename } = credentials;
 		if (ename.length < 1) {
 			console.log(ename.length);
 			notifyWarning("Customer name less than 1");
+		}
+		else if (phone === null || phone === undefined) {
+			notifyWarning("Phone Number can not be empty");
 		}
 		else if (isPossiblePhoneNumber(phone) === false) {
 			console.log(phone);
@@ -75,11 +83,10 @@ const CustomerDetail = (props) => {
 			notifyWarning("Enter valid phone Number");
 		}
 		else {
-			await editCustomer(singleCustomer._id, etitle, ename, phone);
+			dispatch(editCustomer(singleCustomer._id, etitle, ename, phone));
 			singleCustomer = { ...singleCustomer, title: etitle, name: ename, phone: phone };
 			refClose.current.click();
 			window.location.reload();
-			// history.push('/editcustomer');
 		}
 	}
 	const updateCustomerProfile = () => {
@@ -99,10 +106,12 @@ const CustomerDetail = (props) => {
 
 
 
-	const handleDelete = async (e) => {
+	const handleDelete = (e) => {
 		e.preventDefault();
-		await deleteCustomer(singleCustomer._id);
+		dispatch(deleteCustomer(singleCustomer._id, history));
+		localStorage.removeItem('SingleCustomerId');
 	}
+
 	const stringAvatar = (name) => {
 		let text;
 		if (name.split(' ').length > 1)
@@ -257,9 +266,9 @@ const CustomerDetail = (props) => {
 						x > 0 ?
 							<Link className="nav-link" to={{ pathname: `https://api.whatsapp.com/send?phone=${singleCustomer.phone}&text=Dear Sir/Madam, your payment of Rs ${Math.abs(x)} is still pending. Please make payment as soon as possible.` }} target="_blank"><WhatsappOutlinedIcon fontSize='100' /><Typography> Reminder</Typography></Link> :
 							<Box sx={{ color: "#9e9e9e" }}>
-								<PictureAsPdfOutlinedIcon fontSize='100' />
+								<WhatsappOutlinedIcon fontSize='100' />
 								<Typography>
-									Reports
+									Reminder
 								</Typography>
 							</Box>
 					}

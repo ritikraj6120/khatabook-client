@@ -1,16 +1,16 @@
 import './App.css';
 import { ToastContainer } from 'react-toastify';
+import { BrowserRouter as Router } from "react-router-dom";
 import UserState from './context/UserState';
 import NoteState from './context/NoteState';
-import CustomerState from './context/CustomerState';
 import SupplierState from './context/SupplierState';
 import Navbar from './components/Navbar';
 import KhataBookRouterapp from './AllRoutes';
 const App = () => {
 	return (
-		<UserState>
-			<NoteState>
-				<CustomerState>
+		<Router>
+			<UserState>
+				<NoteState>
 					<SupplierState>
 						<Navbar />
 						{/* <Alert /> */}
@@ -19,9 +19,9 @@ const App = () => {
 						<KhataBookRouterapp />
 						{/* </div> */}
 					</SupplierState>
-				</CustomerState>
-			</NoteState>
-		</UserState>
+				</NoteState>
+			</UserState>
+		</Router>
 	);
 };
 export default App;

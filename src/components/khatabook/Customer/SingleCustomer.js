@@ -1,14 +1,14 @@
-import React, { useContext, useEffect } from 'react';
-import CustomerContext from '../../../context/CustomerContext';
-import { useHistory,Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSingleCustomerTransactions, getSingleCustomerDetail } from '../../../actions/customerAction'
+import { handleLogout } from '../../../actions/userAction'
+import { useHistory, Link } from 'react-router-dom';
 import '../style.css';
 import CustomerDetail from './CustomerDetail';
-// import Navbar from '../Navbar';
-import { Typography, Button, CircularProgress, Table, TableRow, TableHead, TableBody, TableCell, CardContent, Card } from '@mui/material';
+import { Typography, Button, CircularProgress, Table, TableRow, TableHead, TableBody, TableCell } from '@mui/material';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 
@@ -20,26 +20,40 @@ const Item = styled(Paper)(({ theme }) => ({
 	color: theme.palette.text.secondary,
 }));
 
-
 const SingleCustomer = () => {
 	let history = useHistory();
-	const { SingleCustomerTransaction, getSingleCustomerTransactions, getSingleCustomerDetail, singleCustomerDetail, setSingleTransactionOfParticularCustomer } = useContext(CustomerContext);
-	const { singleCustomer, loading } = singleCustomerDetail;
-	const singlecustomerid = JSON.parse(localStorage.getItem('SingleCustomerId'));
-
+	const dispatch = useDispatch();
+	const singlecustomerid = localStorage.getItem('SingleCustomerId');
+	const userLoginState = useSelector(state => state.userLogin.userInfo)
+	const SingleCustomerTransactionState = useSelector(state => state.singleCustomerTransactions);
+	const singleCustomerDetailState = useSelector(state => state.SingleCustomerDetail);
+	const { SingleCustomerTransaction } = SingleCustomerTransactionState
+	const { singleCustomer } = singleCustomerDetailState
 
 	useEffect(() => {
-		getSingleCustomerTransactions(singlecustomerid);
-		getSingleCustomerDetail(singlecustomerid);
-		// eslint-disable-next-line
-	}, [])
+		if (userLoginState !== null) {
+			dispatch(getSingleCustomerTransactions(singlecustomerid));
+			dispatch(getSingleCustomerDetail(singlecustomerid))
+		}
+		else {
+			dispatch(handleLogout(history));
+		}
 
 
-	const handleEditSupplier = async (item) => {
-		console.log(item._id);
-		await setSingleTransactionOfParticularCustomer({ ...item })
+	}, [userLoginState])
+
+	// useEffect(() => {
+
+	// 	dispatch(getSingleCustomerTransactions(singlecustomerid));
+	// 	dispatch(getSingleCustomerDetail(singlecustomerid))
+
+
+	// }, [])
+
+
+
+	const handleEditSupplier = (item) => {
 		if (item.lendamount_singleCustomer > 0) {
-
 			history.push('/editcustomertransactionforgaveamount', {
 				transactionid: item._id, name: singleCustomer.name, ...item
 			});
@@ -63,12 +77,10 @@ const SingleCustomer = () => {
 	}
 	return (
 		<>
-			{/* <Navbar a="/editcustomer" b="/editsupplier" /> */}
 			{
-
-				loading === true ? <CircularProgress color="secondary" /> :
+				(SingleCustomerTransactionState.loading || singleCustomerDetailState.loading) ?
+					<CircularProgress /> :
 					<>
-
 						<Grid container spacing={2} sx={{}}>
 							<Grid item xs={9} sx={{ overflowY: "auto", maxHeight: "90vh" }}>
 								<Breadcrumbs separator="›" sx={{ padding: 2 }} aria-label="breadcrumb">
@@ -81,6 +93,7 @@ const SingleCustomer = () => {
 										to="#"
 									>
 										{singleCustomer.name}
+										{/* RITIK RAJ */}
 									</Link>
 								</Breadcrumbs>
 								<Table >
@@ -302,7 +315,6 @@ const SingleCustomer = () => {
 						</Card> */}
 					</>
 			}
-
 		</>
 	);
 };

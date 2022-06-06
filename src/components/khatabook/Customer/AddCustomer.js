@@ -1,6 +1,8 @@
-import React, { useState, useContext } from 'react'
-import { useHistory,Link } from "react-router-dom";
-import CustomerContext from "../../../context/CustomerContext"
+import React, { useState } from 'react'
+import { Link,useHistory } from "react-router-dom";
+import { addCustomer } from '../../../actions/customerAction';
+import { useDispatch } from 'react-redux';
+
 import { notifyWarning } from '../../../alert';
 import 'react-phone-number-input/style.css'
 import PhoneInput, { isPossiblePhoneNumber, isValidPhoneNumber } from 'react-phone-number-input'
@@ -14,7 +16,6 @@ const Navbar2 = () => {
 						<li className="nav-item" >
 							Add New Customer
 						</li >
-
 					</ul >
 				</div >
 			</div >
@@ -23,9 +24,9 @@ const Navbar2 = () => {
 }
 
 const AddCustomer = () => {
-	let history = useHistory();
-	const { addCustomer } = useContext(CustomerContext)
-	const [phone, setPhone] = useState()
+	const dispatch = useDispatch()
+	let history=useHistory();
+	const [phone, setPhone] = useState('')
 	const [customer, setCustomer] = useState({ title: "Mr", name: "" });
 	const onChange = (e) => {
 		setCustomer({ ...customer, [e.target.name]: e.target.value })
@@ -38,6 +39,9 @@ const AddCustomer = () => {
 			console.log(customer.name.length);
 			notifyWarning("Customer name less than 1");
 		}
+		else if (phone === null || phone === undefined) {
+			notifyWarning("Phone Number can not be empty");
+		}
 		else if (isPossiblePhoneNumber(phone) === false) {
 			console.log(phone);
 			notifyWarning("Enter correct phone Number");
@@ -46,15 +50,12 @@ const AddCustomer = () => {
 			notifyWarning("Enter valid phone Number");
 		}
 		else {
-			// console.log("very good");
-			await addCustomer(customer.title, customer.name, phone);
-			// history.push('/editcustomer');
+			dispatch(addCustomer(history,customer.title, customer.name, phone));
 		}
 	}
 
 	return (
 		<>
-			{/* <Navbar a="/addcustomer" b="/addsupplier" /> */}
 			<br />
 			<Breadcrumbs separator="›" sx={{ padding: 2 }} aria-label="breadcrumb">
 				<Link underline="hover" color="inherit" to="/customers">
@@ -92,7 +93,7 @@ const AddCustomer = () => {
 							defaultCountry="IN"
 							placeholder="Enter Phone Number"
 							className="form-control"
-							id="phone" value={phone} onChange={setPhone} />
+							id="phone" value={phone} onChange={setPhone} required />
 						{/* <input required type="number" className="form-control" id="phone" name="phone" onChange={onChange} placeholder="Enter Phone Number" /> */}
 					</div>
 

@@ -1,6 +1,5 @@
 import { Switch, Route, Redirect } from "react-router-dom";
-import { useContext } from 'react';
-import UserContext from "./context/UserContext"
+import { useSelector } from 'react-redux'
 import Notes from './components/Notes/Notes';
 import Important from './components/Notes/Important.js';
 import Completed from './components/Notes/Completed.js';
@@ -28,15 +27,17 @@ import EditSingleSupplierTransactionForPayment from './components/khatabook/Supp
 import EditSingleSupplierTransactionForPurchase from './components/khatabook/Supplier/EditSingleSupplierTransactionForPurchase';
 
 const KhataBookRouterapp = () => {
-	const { userloggedin } = useContext(UserContext);
-	let currentloggedin = false;
-	if (userloggedin === true) {
-		currentloggedin = true;
-	}
-	else if (userloggedin === false && localStorage.getItem('token') !== null) {
-		currentloggedin = true;
-	}
-	console.log(currentloggedin);
+	// const { userloggedin } = useContext(UserContext);
+	// let currentloggedin = false;
+	// if (userloggedin === true) {
+	// 	currentloggedin = true;
+	// }
+	// else if (userloggedin === false && localStorage.getItem('token') !== null) {
+	// 	currentloggedin = true;
+	// }
+	// console.log(currentloggedin);
+	const userLoginState = useSelector(state => state.userLogin)
+	const currentloggedin = userLoginState.userInfo === null ? false : true
 	return (
 		<Switch>
 			<Route exact path="/">

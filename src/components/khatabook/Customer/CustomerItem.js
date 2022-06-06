@@ -1,6 +1,16 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import Avatar from '@mui/material/Avatar';
+import { Avatar, Button, Card, CardContent, CardActions, Divider, Box, Typography, Grid, Icon } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+const theme = createTheme({
+	palette: {
+		primary: {
+			main: '#fcfcfc'
+		}
+	},
+});
+
 const CustomerItem = (props) => {
 	let history = useHistory();
 	const { customer, customerBalance } = props;
@@ -10,7 +20,7 @@ const CustomerItem = (props) => {
 	if (result[0])
 		x = result[0].amounttoget - result[0].amounttogive;
 	const edit = () => {
-		localStorage.setItem("SingleCustomerId", JSON.stringify(customer._id));
+		localStorage.setItem("SingleCustomerId", customer._id);
 		history.push('/singlecustomer');
 	}
 	const stringAvatar = (name) => {
@@ -24,7 +34,27 @@ const CustomerItem = (props) => {
 
 	return (
 		<>
-			<button className="btn btn-outline-dark" onClick={edit}>
+			<ThemeProvider theme={theme}>
+				<Button variant="contained" disableRipple sx={{ backGroundcolor: "white", width: "100%", display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: "16px 24px", }} onClick={edit}>
+					<Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+						<Avatar sx={{ bgcolor: "#186fd9", width: 40, height: 40, marginLeft: "1vw", fontSize: 16 }}>
+							{stringAvatar(name)}
+						</Avatar>
+						<Typography sx={{ marginLeft: "3vh" }} variant="h6">{name}</Typography>
+					</Box>
+					<Box sx={{ display: 'flex', flexDirection: 'column' }}>
+						<Typography sx={{ fontSize: 24, fontWeight: "bold", color: `${x >= 0 ? "#C82128" : "0F814D"}` }}>
+							<CurrencyRupeeIcon sx={{ fontSize: 24, fontWeight: "bold" }} />
+							{Math.abs(x)}
+						</Typography>
+						<Typography variant="body1" sx={{ fontSize: 12, color: "#828584" }} >
+							{x >= 0 ? x > 0 ? "You will get" : null : "You will give"}
+						</Typography>
+					</Box>
+				</Button>
+				<Divider/>
+			</ThemeProvider>
+			{/* <button className="btn btn-outline-dark" onClick={edit}>
 				<div className="d-flex bd-highlight">
 					<Avatar sx={{ bgcolor: "#186fd9", width: 40, height: 40, marginLeft: "1vw", fontSize: 16 }}>
 						{stringAvatar(name)}
@@ -36,7 +66,7 @@ const CustomerItem = (props) => {
 						{x >= 0 ? x > 0 ? <small>You will get </small> : null : <small>You will give</small>}
 					</div>
 				</div>
-			</button>
+			</button> */}
 		</>
 
 	)

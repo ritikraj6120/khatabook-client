@@ -61,7 +61,7 @@ const UserState = (props) => {
 	// Get User details
 	const getUser = async () => {
 		// API Call 
-		const response = await fetch(`${host}/api/user/fetchspecificeuser`, {
+		const response = await fetch(`${host}/api/user/fetchuserdetails`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react'
-import UserContext from '../context/UserContext';
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { handleLogout, getUserDetails, changePassword } from '../actions/userAction'
 import { useHistory } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/Send';
 import Box from "@mui/material/Box";
@@ -7,26 +8,36 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import CircularProgress from '@mui/material/CircularProgress';
 import { TextField, Divider, Paper } from '@mui/material';
 import { notifyWarning } from '../alert';
+import Alert from '@mui/material/Alert';
 const User = () => {
 	let history = useHistory();
-	const { UserDetail, getUser, changePassword } = useContext(UserContext);
-	useEffect(() => {
-		if (localStorage.getItem('token'))
-			getUser()
-		else {
-			localStorage.clear();
-			history.push('/login');
-		}
-		// eslint-disable-next-line
-	}, [])
-
+	const dispatch = useDispatch();
+	const userLoginState = useSelector(state => state.userLogin.userInfo)
+	const UserDetailState = useSelector(state => state.userDetails)
+	const UserDetail = UserDetailState.user
+	let UpdateProfileSuccess = useSelector(state => state.userUpdateProfile.success)
 	const [passwords, setPasswords] = useState({ currentPassword: "", newPassword: "" })
+
+	useEffect(() => {
+		if (userLoginState !== null)
+			dispatch(getUserDetails())
+		else {
+			dispatch(handleLogout(history));
+		}
+	}, [userLoginState])
+
+	useEffect(() => {
+		if (UpdateProfileSuccess === true) {
+			setPasswords({ currentPassword: "", newPassword: "" })
+		}
+	}, [UpdateProfileSuccess])
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
-		// eslint-disable-next-line no-console
 		const user = {
 			currentPassword: data.get('currentPassword'),
 			newPassword: data.get('newPassword'),
@@ -35,38 +46,41 @@ const User = () => {
 			notifyWarning("New Password is same as Old Password");
 			return;
 		}
-		const status = await changePassword(user);
-		if (status === 200) {
-			setPasswords({ currentPassword: "", newPassword: "" })
-		}
-
+		dispatch(changePassword(user));
 	};
 	return (
 		<>
-			<Box sx={{ minWidth: 275 }}>
-				<Card variant="outlined">
-					<CardContent>
-						<Typography color="text.secondary">
-							Name
-						</Typography>
-						<Typography variant="h5" component="div">
-							{UserDetail.fname + " " + UserDetail.lname}
-						</Typography>
-						<Typography color="text.secondary">
-							Email
-						</Typography>
-						<Typography variant="body2">
-							{UserDetail.email}
-						</Typography>
-						<Typography color="text.secondary">
-							Created account on
-						</Typography>
-						<Typography variant="body2">
-							{new Date(UserDetail.date).toLocaleString()} I.S.T
-						</Typography>
-					</CardContent>
-				</Card>
-			</Box>
+			{
+				UserDetailState.loading ?
+					<CircularProgress />
+					:
+					UserDetailState.error !== null ?
+						<Alert severity="error">{UserDetailState.error}</Alert> :
+						< Box sx={{ minWidth: 275 }}>
+							<Card variant="outlined">
+								<CardContent>
+									<Typography color="text.secondary">
+										Name
+									</Typography>
+									<Typography variant="h5" component="div">
+										{UserDetail.fname + " " + UserDetail.lname}
+									</Typography>
+									<Typography color="text.secondary">
+										Email
+									</Typography>
+									<Typography variant="body2">
+										{UserDetail.email}
+									</Typography>
+									<Typography color="text.secondary">
+										Created account on
+									</Typography>
+									<Typography variant="body2">
+										{new Date(UserDetail.date).toLocaleString()} I.S.T
+									</Typography>
+								</CardContent>
+							</Card>
+						</Box>
+			}
 			<div className="container">
 				<Paper elevation={3} sx={{
 					width: "35vw", borderRadius: "10px"

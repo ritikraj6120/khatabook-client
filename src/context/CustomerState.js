@@ -8,7 +8,6 @@ const CustomerState = (props) => {
 	const host = "https://khatabook-app.herokuapp.com"
 	const [customers, setCustomers] = useState([])
 	const [SingleCustomerTransaction, setSingleCustomerTransaction] = useState([]);
-	const [CustomerTransactions, setCustomerTransactions] = useState([]);
 	const [SingleTransactionOfParticularCustomer, setSingleTransactionOfParticularCustomer] = useState({});
 	const { handleLogout } = useContext(UserContext)
 
@@ -266,26 +265,6 @@ const CustomerState = (props) => {
 		}
 	}
 
-	// get whole customer transactions
-	const getCustomerTransactions = async () => {
-		const response = await fetch(`${host}/api/customer/getCustomerTransactions/`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				"auth-token": localStorage.getItem('token')
-
-			}
-		});
-		if (response.status !== 200) {
-
-			handleLogout()
-		}
-		else {
-			const json = await response.json()
-			setCustomerTransactions(json);
-		}
-	}
-
 	//  add a transaction  using: post "/api/customer/addCustomerTransaction/" function no 7
 
 	const addSingleCustomerTransaction = async (id, lendamount_singleCustomer, takeamount_singleCustomer, billDetails, billNo, date) => {
@@ -387,7 +366,7 @@ const CustomerState = (props) => {
 			handleLogout()
 		}
 	}
-	// fetch balance of each customer function no 9
+	// fetch balance of every customer function no 9
 	const getCustomerBalance = async () => {
 		try {
 			const response = await fetch(`${host}/api/customer/getCustomerBalance`, {

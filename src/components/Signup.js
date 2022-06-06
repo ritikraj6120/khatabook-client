@@ -1,91 +1,6 @@
-// import React, { useState,useContext } from "react";
-// import { useHistory } from "react-router-dom";
-// import noteContext from "../context/notes/noteContext";
-// const Signup = (props) => {
-// 	const context=useContext(noteContext);
-// 	const { showAlert } = context;
-// 	let history = useHistory();
-// 	const [credentials, setCredentials] = useState({ name: "", email: "", password: "" })
 
-
-// 	const handleSubmit = async (e) => {
-// 		e.preventDefault();
-// 		const { name, email, password } = credentials;
-// 		const response = await fetch("http://localhost:5000/api/auth//createuser", {
-// 			method: 'POST',
-// 			headers: {
-// 				'Content-Type': 'application/json'
-// 			},
-// 			body: JSON.stringify({ name, email, password })
-// 		});
-// 		const json = await response.json()
-// 		console.log(json);
-// 		if (json.success) {
-// 			// Save the auth token and redirect
-// 			localStorage.setItem('token', json.authtoken);
-
-// 			history.push("/");
-// 			showAlert("Account Created Successfully","success")
-
-// 		}
-// 		else {
-// 			showAlert("Invalid Details","danger")
-// 		}
-// 	}
-
-// 	const onChange = (e) => {
-// 		setCredentials({ ...credentials, [e.target.name]: e.target.value })
-// 	}
-
-// 	return (
-//         <div className='mt-3 container'>
-// 			<h2 className="my-3">Create an account to use  iNotebook</h2>
-// 			<form onSubmit={handleSubmit}>
-// 				<div className="my-3">
-// 					<label htmlFor="name" className="form-label">
-// 						Enter Your Name
-// 					</label>
-// 					<input type="text" className="form-control" id="name" aria-describedby="emailHelp" name="name" value={credentials.name} onChange={onChange} 
-// 					/>
-// 				</div>
-// 				<div className="mb-3">
-// 					<label htmlFor="email" className="form-label">
-// 						Email address
-// 					</label>
-// 					<input
-// 						type="email"
-// 						className="form-control"
-// 						id="email"
-// 						aria-describedby="emailHelp" name="email" value={credentials.email} onChange={onChange} required minLength={5}
-// 					/>
-// 					<div id="emailHelp" className="form-text">
-// 						We'll never share your email with anyone else.
-// 					</div>
-// 				</div>
-// 				<div className="mb-3">
-// 					<label htmlFor="password" className="form-label">
-// 						Password
-// 					</label>
-// 					<input
-// 						type="password"
-// 						className="form-control"
-// 						id="password" name="password" value={credentials.password} onChange={onChange} required minLength={5}
-// 					/>
-// 				</div>
-
-// 				<button type="submit" className="btn btn-primary">
-// 					Submit
-// 				</button>
-// 			</form>
-// 		</div>
-// 	);
-// };
-
-// export default Signup;
-
-import React, { useContext, useState } from "react";
-import {Link} from "react-router-dom"
-import UserContext from "../context/UserContext.js";
+import React from "react";
+import {Link,useHistory} from "react-router-dom"
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -96,6 +11,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useDispatch } from 'react-redux'
+import { signup } from '../actions/userAction.js';
 function Copyright(props) {
 	return (
 		<Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -111,7 +28,8 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
-	const { signup } = useContext(UserContext);
+	let history = useHistory()
+	const dispatch = useDispatch()
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const data = new FormData(e.currentTarget);
@@ -121,7 +39,7 @@ export default function SignUp() {
 			email: data.get("email"),
 			password: data.get("password")
 		};
-		await signup(user);
+		dispatch(signup(user, history));
 	}
 
 	return (

@@ -1,6 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
-import CustomerContext from '../../../context/CustomerContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSingleCustomerTransactions, getSingleCustomerDetail } from '../../../actions/customerAction';
+import { handleLogout } from '../../../actions/userAction'
 import { Typography, Button, CircularProgress, AppBar, Table, TableRow, TableHead, TableBody, TableCell, Toolbar, IconButton, Card, CardContent } from '@mui/material';
 import { Box } from '@mui/system';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -11,24 +13,36 @@ import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import generatePDF from './pdfGeneration_singleCustomer';
 const SingleCustomerReport = () => {
 	let history = useHistory();
-	const { SingleCustomerTransaction, getSingleCustomerTransactions, getSingleCustomerDetail, singleCustomerDetail } = useContext(CustomerContext);
-	const { singleCustomer, loading } = singleCustomerDetail;
-	const singlecustomerid = JSON.parse(localStorage.getItem('SingleCustomerId'));
+	const dispatch = useDispatch();
+	const singlecustomerid = localStorage.getItem('SingleCustomerId');
+	const userLoginState = useSelector(state => state.userLogin.userInfo)
+	const SingleCustomerTransactionState = useSelector(state => state.singleCustomerTransactions);
+	const singleCustomerDetail = useSelector(state => state.SingleCustomerDetail)
+	const { SingleCustomerTransaction } = SingleCustomerTransactionState;
+	const { singleCustomer } = singleCustomerDetail;
 
 	useEffect(() => {
-		getSingleCustomerTransactions(singlecustomerid);
-		getSingleCustomerDetail(singlecustomerid);
-		// eslint-disable-next-line
-	}, [])
+		if (userLoginState !== null) {
+			dispatch(getSingleCustomerTransactions(singlecustomerid));
+			dispatch(getSingleCustomerDetail(singlecustomerid));
+		}
+		else {
+			dispatch(handleLogout(history))
+		}
+	}, [userLoginState])
+
 	let yougave = 0, yougot = 0, netbalance = 0;
 	let x;
-	if (loading === false) {
-		// can apply conddition but not of much otimisation
+	if (SingleCustomerTransactionState.loading === false) {
+		// can apply conddition but not of much optimisation
 		for (let i = 0; i < SingleCustomerTransaction.length; i++) {
 			yougave += SingleCustomerTransaction[i].lendamount_singleCustomer;
 			yougot += SingleCustomerTransaction[i].takeamount_singleCustomer;
 		}
 		netbalance = yougave - yougot;
+	}
+
+	if (singleCustomerDetail.loading === false) {
 		x = `https://api.whatsapp.com/send?phone=${singleCustomer.phone}`;
 	}
 	const month = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
@@ -57,7 +71,7 @@ const SingleCustomerReport = () => {
 	return (
 		<>
 			{
-				loading === true ? <CircularProgress color="secondary" /> :
+				(SingleCustomerTransactionState.loading === true || singleCustomerDetail.loading === true) ? <CircularProgress color="secondary" /> :
 					<>
 						<Box sx={{ flexGrow: 1, mb: 4 }}>
 							<AppBar position="static">

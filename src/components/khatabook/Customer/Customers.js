@@ -1,39 +1,52 @@
-import React, { useContext, useEffect } from 'react'
-import CustomerContext from "../../../context/CustomerContext"
+import React, { useEffect } from 'react'
 import CustomerItem from './CustomerItem';
-import { useHistory, Link } from 'react-router-dom'
-// import Navbar from '../Navbar'
+import { useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { getCustomers, getCustomerBalance } from '../../../actions/customerAction';
+import { handleLogout } from '../../../actions/userAction'
 import '../style.css'
-import { Button, Grid, Card } from '@mui/material';
-import { Box } from '@mui/system';
+import { Button, Card, CardContent, Divider, Box, Typography, Grid, Paper } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import generatePDF from './customerReport';
-import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
+// import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import CircularProgress from '@mui/material/CircularProgress';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+const theme = createTheme({
+	palette: {
+		primary: {
+			main: '#A10C50'
+		}
+	},
+});
+
+
+
 const Customers = () => {
 	let history = useHistory();
-	const { customers, getCustomers, getCustomerBalance, customerstate } = useContext(CustomerContext);
-	const { customerBalance, loading } = customerstate;
+	const dispatch = useDispatch();
+	const userLoginState = useSelector(state => state.userLogin.userInfo)
+	const customersState = useSelector(state => state.getCustomers)
+	const customerBalanceState = useSelector(state => state.getCustomerBalance)
+	const { customerBalance } = customerBalanceState;
+	const { customers } = customersState
 	useEffect(() => {
-		getCustomers();
-		getCustomerBalance();
-		// eslint-disable-next-line
-	}, [])
-	useEffect(() => {
-		if (customerstate.error === 'Something Went wrong!') {
-			history.push('/login');
+		if (userLoginState !== null) {
+			dispatch(getCustomers());
+			dispatch(getCustomerBalance());
 		}
-	}, [customerstate.error])
+		else {
+			dispatch(handleLogout(history));
+		}
+	}, [userLoginState])
 	let TotalAmounttoget = 0;
 	let TotalAmounttogive = 0;
-	let NetBalance = 0;
-	// console.log("hello");
-	// console.log(customerstate.loading);
-	if (loading === false) {
-
+	let netBalance = 0;
+	if (customerBalanceState.loading === false) {
 		for (let i = 0; i < customerBalance.length; i++) {
 			let x = customerBalance[i].amounttoget - customerBalance[i].amounttogive;
-			NetBalance += x;
+			netBalance += x;
 			if (x >= 0) {
 				TotalAmounttoget += x;
 			}
@@ -42,13 +55,106 @@ const Customers = () => {
 			}
 		}
 	}
+
+	function handleClick(e) {
+		history.push('/addcustomer');
+	}
 	return (
 		<>
-			{/* <Navbar a="/customers" b="/suppliers" /> */}
 			{
-				loading === true ? <CircularProgress color="secondary" /> :
+				(customerBalanceState.loading || customersState.loading) ? <CircularProgress color="secondary" /> :
 					<>
-						<div className="card mt-5" style={{ width: "18rem" }}>
+						<Grid container sx={{ marginTop: "1vw" }}  >
+
+
+							<Grid item xs={9} sx={{ overflowY: "auto", maxHeight: "90vh", backgroundColor: "#efefef" }}>
+								<Box sx={{ height: "10vh", margin: "0px 14px", marginTop: "16px", marginBottom: "8px", display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between' }} >
+									<Box sx={{ display: 'flex', flexDirection: "row", marginLeft: "8px" }}>
+										<Typography variant="body1" sx={{ fontSize: "16px", fontWeight: "500" }}>
+											Customers
+										</Typography>
+										<Typography variant="body1" sx={{ fontSize: "14px", fontWeight: "400" }}>
+											({customers.length})
+										</Typography>
+									</Box>
+									<ThemeProvider theme={theme}>
+										<Button variant="contained" size="small" sx={{ backgroundColor: "#A10C50" }} startIcon={<PersonAddAltIcon />} onClick={handleClick}>
+											Add Customer
+										</Button>
+									</ThemeProvider>
+								</Box>
+								<Box sx={{ display: 'flex', flexDirection: 'column', margin: "0px 14px", marginBottom:"2vh"}}>
+									{customers.map((customer) => {
+										return <CustomerItem key={customer._id} customer={customer} customerBalance={customerBalance} />
+									})}
+								</Box>
+							</Grid>
+
+
+							<Grid item xs={3}>
+								<Card variant="outlined" sx={{ textAlign: 'center', maxHeight: "60vh", overflowY: "auto" }}>
+
+									<AccountBalanceWalletIcon sx={{ bgcolor: "#f2f1c4", color: "#ecac38f5", width: "4rem", height: "4rem", marginBottom: "16px", marginTop: "2vw", borderRadius: "4rem" }} />
+									<CardContent sx={{ padding: 0 ,paddingBottom:0 }}>
+										<Typography variant="h6" sx={{ fontSize: 20 }}>
+											Net Balance
+										</Typography>
+										<Box sx={{ mb: "2rem" }}>
+											<Typography sx={{ fontSize: 24, fontWeight: "bold", color: `${netBalance >= 0 ? "#C82128" : "0F814D"}` }}>
+												<CurrencyRupeeIcon sx={{ fontSize: 24, fontWeight: "bold" }} />
+												{netBalance}
+											</Typography>
+											<Typography color="text.secondary" gutterBottom variant="body1" sx={{ display: 'inline' }}>
+												{netBalance >= 0 ? "You'll Get" : "You'll Give"}
+											</Typography>
+										</Box>
+										<Divider />
+										<Box
+											sx={{
+												display: 'flex',
+												alignItems: 'center',
+												justifyContent: 'space-evenly',
+												// width: 'fit-content',
+												borderBottom: (theme) => `10px solid rgb(0 0 0 / -1.88)`,
+												borderRadius: 1,
+												// bgcolor: 'yellow',
+												color: 'text.secondary',
+												'& hr': {
+													mx: 0.5,
+													// width:"50px",
+													// height:"35px"
+												},
+											}}
+										>
+											<Box sx={{ marginBottom: "1vh" }}>
+												<Typography color="text.secondary" variant="body1" sx={{ display: 'inline' }}>
+													You'll Get
+												</Typography>
+												<Typography sx={{ fontSize: 20, fontWeight: "bold", color: "#C82128" }}>
+													<CurrencyRupeeIcon sx={{ fontSize: 20 }} />
+													{TotalAmounttoget}
+												</Typography>
+											</Box>
+											<Divider orientation="vertical" variant="middle" />
+											<Box>
+												<Typography color="text.secondary" variant="body1" sx={{ display: 'inline' }}>
+													You'll Give
+												</Typography>
+												<Typography sx={{ fontSize: 20, fontWeight: "bold", color: "#0F814D" }}>
+													<CurrencyRupeeIcon sx={{ fontSize: 20 }} />
+													{TotalAmounttogive}
+												</Typography>
+											</Box>
+										</Box>
+										<Button variant="contained" size="small" onClick={() => generatePDF(customers, customerBalance)}>
+											Download Report
+										</Button>
+									</CardContent>
+								</Card>
+							</Grid>
+						</Grid>
+
+						{/* <div className="card mt-5" style={{ width: "18rem" }}>
 							<div className="card-body">
 								<h5 className="card-title">You will get </h5>
 								<p className="card-text">Rs {TotalAmounttoget}</p>
@@ -58,29 +164,29 @@ const Customers = () => {
 									Download Report
 								</Button>
 							</div>
-						</div>
+						</div> */}
 
-						<div className=" my-3">
-							<br />
-							<div className="container mx-2 h3">
-								{customers.length === 0 && 'No Customers'}
-							</div>
-							<div className="d-flex justify-content-center">
-								<div className='d-grid gap-2 col-6 '>
-									{customers.map((customer) => {
-										return <CustomerItem key={customer._id} customer={customer} customerBalance={customerBalance} />
-									})}
-								</div>
-							</div>
-						</div>
+						{/* <div className=" my-3">
+									<br />
+									<div className="container mx-2 h3">
+										{customers !== null && customers.length === 0 && 'No Customers'}
+									</div>
+									<div className="d-flex justify-content-center">
+										<div className='d-grid gap-2 col-6 '>
+											{customers.map((customer) => {
+												return <CustomerItem key={customer._id} customer={customer} customerBalance={customerBalance} />
+											})}
+										</div>
+									</div>
+								</div> */}
 					</>
 			}
-			<Link to="/addcustomer">
+			{/* <Link to="/addcustomer">
 				<button type="button" className="btn  sticky-btn">
 					<PersonAddRoundedIcon style={{ color: "white" }} />
 				</button>
-			</Link>
-						{/* <Card variant="outlined" sx={{ textAlign: 'center', maxHeight: "60vh", overflowY: "auto" }}>
+			</Link> */}
+			{/* <Card variant="outlined" sx={{ textAlign: 'center', maxHeight: "60vh", overflowY: "auto" }}>
 							<AccountBalanceWalletIcon sx={{ bgcolor: "#186fd9", width: 107, height: 107, marginLeft: "8vw", fontSize: 32, fontWeight: "bold", marginBottom: "16px", marginTop: "2vw" }} />
 
 
@@ -88,7 +194,8 @@ const Customers = () => {
 								<Typography variant="h6" sx={{ fontSize: 20, mb: 1 }}>
 									Net Balance
 								</Typography>
-								{NetBalance >= 0 ? x > 0 ?
+								{
+									NetBalance >= 0 ? x > 0 ?
 									<>
 										<Box>
 											<Typography sx={{ fontSize: 20, fontWeight: "bold", color: "#C82128" }}>
@@ -162,15 +269,15 @@ const Customers = () => {
 								}
 								<Divider orientation="vertical" variant="middle" />
 								{/* <Link to="/" className="nav-link" style={true ? { pointerEvents: "none" } : null}>Test</Link> */}
-								{/* <Typography variant="body1">hello</Typography> */}
-							{/* </Box> */}
-							{/* </CardActions> */}
-						{/* </Card >  */}
+			{/* <Typography variant="body1">hello</Typography> */}
+			{/* </Box> */}
+			{/* </CardActions> */}
+			{/* </Card >  */}
 
-					</>
+		</>
 	)
 }
 
-			export default Customers
+export default Customers
 
 

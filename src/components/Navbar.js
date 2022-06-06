@@ -1,14 +1,14 @@
 import React from 'react'
-import { useContext } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useLocation, useHistory } from "react-router-dom";
-import UserContext from '../context/UserContext';
+import { handleLogout } from '../actions/userAction'
 import UserNavbar from './UserNavbar';
 import Button from '@mui/material/Button';
 
 const Navbar = () => {
 	let history = useHistory();
-	const { handleLogout } = useContext(UserContext)
 	let location = useLocation();
+	const dispatch = useDispatch();
 	return (
 		<nav className="navbar navbar-expand-lg navbar-dark bg-dark">
 			<div className="container-fluid">
@@ -41,8 +41,7 @@ const Navbar = () => {
 						</form> :
 							<>
 								<UserNavbar />
-								<Button variant="contained" onClick={handleLogout}>Logout</Button>
-								{/* <button onClick={handleLogout} className="btn btn-primary">Logout</button> */}
+								<Button variant="contained" onClick={()=>	dispatch(handleLogout(history))}>Logout</Button>
 							</>
 					}
 				</div>
