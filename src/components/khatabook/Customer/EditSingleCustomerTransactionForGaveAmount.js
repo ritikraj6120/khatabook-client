@@ -15,7 +15,6 @@ const EditSingleCustomerTransactionForGaveAmount = () => {
 	const location = useLocation();
 	const { transactionid, name, ...item } = location.state;
 	const singlecustomerid = localStorage.getItem('SingleCustomerId');
-
 	const errorStateinit = {
 		amountError: null
 	}
@@ -32,15 +31,15 @@ const EditSingleCustomerTransactionForGaveAmount = () => {
 		if ('billDetails' in item)
 			setNewTransactiondateBilldetails(item.billDetails);
 		if ('billNo' in item) {
-			console.log("hello");
+			// console.log("hello");
 			setAddBillNo(item.billNo);
 			settoggleAddBillNo(true);
 		}
 		else {
 			settoggleAddBillNo(false);
-			console.log("hh")
+			// console.log("hh")
 		}
-		console.log(item);
+		// console.log(item);
 	}, [item._id])
 	// setNewTransaction(SingleTransactionOfParticularCustomer.lendamount_singleCustomer);
 	// setNewTransactiondate(SingleTransactionOfParticularCustomer.date);
@@ -95,7 +94,7 @@ const EditSingleCustomerTransactionForGaveAmount = () => {
 					<>
 						<div>
 							<Breadcrumbs separator="›" sx={{ padding: 2 }} aria-label="breadcrumb">
-								<Link underline="hover" color="inherit" to="/custmers">
+								<Link underline="hover" color="inherit" to="/customers">
 									Customers List
 								</Link>
 								<Link

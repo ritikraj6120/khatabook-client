@@ -16,18 +16,19 @@ const AddNewTransactionForCustomerGave = () => {
 		amountError: null
 	}
 	const [errorState, seterrorState] = useState(errorStateinit);
-	const userLoginState = useSelector(state => state.userLogin.userInfo)
+	const userLoginState = useSelector(state => state.userLogin)
+	const userLoginInfo=userLoginState.userInfo
 	const singleCustomerDetail = useSelector(state => state.SingleCustomerDetail)
 	const { singleCustomer, loading } = singleCustomerDetail;
 
 	useEffect(() => {
-		if (userLoginState !== null) {
+		if (userLoginInfo !== null) {
 			dispatch(getSingleCustomerDetail(singlecustomerid));
 		}
 		else {
 			dispatch(handleLogout(history))
 		}
-	}, [userLoginState])
+	}, [userLoginInfo])
 
 	const [newTransaction, setNewTransaction] = useState('');
 	const [newTransactiondate, setNewTransactiondate] = useState(new Date());

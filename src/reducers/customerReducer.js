@@ -43,34 +43,55 @@ import {
 	SINGLE_CUSTOMER_DETAILS_FETCH_ERROR,
 } from "../constants/customerConstant";
 
-export const getCustomersReducer = (state = { loading: true, customers: null, error: null }, action) => {
+export const getCustomersReducer = (state = { loading: true, customers: [], error: null }, action) => {
 	switch (action.type) {
+
 		case CUSTOMER_GET_REQUEST:
 			return { ...state, loading: true, customers: null, error: null };
+
 		case CUSTOMER_GET_SUCCESS:
 			return { ...state, loading: false, customers: action.payload, error: null };
+
 		case CUSTOMER_APPEND_SUCCESS:
+			let x = state.customers
+			x.push(action.payload)
+			// console.log(x);
 			return {
-				...state, customers: [...state.customers, action.payload]
+				...state, customers: x
 			};
 
 		case CUSTOMER_UPDATE_SUCCESS:
 			let { id, title, name, phone } = action.payload
-			console.log(state.customers === null)
-			return {
-				...state,
-				customers: state.customers.map(customer => {
-					if (customer._id !== id) {
-						return customer
-					}
-					return {
-						...customer,
-						title: title,
-						name: name,
-						phone: phone,
-					}
-				})
+			let y = state.customers
+			for (let index = 0; index < y.length; index++) {
+				const element = y[index];
+				if (element._id === id) {
+					y[index].title = title;
+					y[index].name = name;
+					y[index].phone = phone;
+					break;
+				}
 			}
+			console.log(y)
+			return {
+				...state, customers: y
+			};
+
+
+		// return {
+		// 	...state,
+		// 	customers: state.customers.map(customer => {
+		// 		if (customer._id !== id) {
+		// 			return customer
+		// 		}
+		// 		return {
+		// 			...customer,
+		// 			title: title,
+		// 			name: name,
+		// 			phone: phone,
+		// 		}
+		// 	})
+		// }
 
 
 		// let { id, title, name, phone } = action.payload
@@ -87,7 +108,7 @@ export const getCustomersReducer = (state = { loading: true, customers: null, er
 
 		case CUSTOMER_REMOVE_SUCCESS:
 			const newCustomers = state.customers.filter((customer) => customer._id !== action.payload)
-			return { ...state, customers: [...newCustomers] };
+			return { ...state, customers: newCustomers };
 
 		case CUSTOMER_GET_FAIL:
 			return { ...state, loading: false, customers: null, error: action.payload };
@@ -150,38 +171,68 @@ export const getSingleCustomerDetailReducer = (state = { loading: true, singleCu
 
 }
 
-export const singleCustomerTransactionsReducer = (state = { loading: true, SingleCustomerTransaction: null, error: null }, action) => {
+export const singleCustomerTransactionsReducer = (state = { loading: true, SingleCustomerTransaction: [], error: null }, action) => {
 	switch (action.type) {
+
 		case SINGLE_CUSTOMER_TRANSACTION_GET_REQUEST:
 			return { ...state, loading: true, SingleCustomerTransaction: null, error: null };
+
 		case SINGLE_CUSTOMER_TRANSACTION_GET_SUCCESS:
 			return { ...state, loading: false, SingleCustomerTransaction: action.payload, error: null };
+
 		case SINGLE_CUSTOMER_TRANSACTION_GET_FAIL:
 			return { ...state, loading: false, SingleCustomerTransaction: null, error: action.payload };
+
 		case SINGLE_CUSTOMER_TRANSACTION_APPEND_SUCCESS:
+			let x = state.SingleCustomerTransaction
+			x.push(action.payload)
+
 			return {
-				...state, SingleCustomerTransaction: [...state.SingleCustomerTransaction, action.payload]
+				...state, SingleCustomerTransaction: x
 			};
+
 
 		case SINGLE_CUSTOMER_TRANSACTION_UPDATE_SUCCESS:
 
 			let { transactionid, lendamount_singleCustomer, takeamount_singleCustomer, billdetails, billNo, date } = action.payload
-			state.SingleCustomerTransaction.map((element) => {
-				if (transactionid === element._id) {
+			let y = state.SingleCustomerTransaction
+			console.log("wala wala")
+			for (let index = 0; index < y.length; index++) {
+				const element = y[index];
+				if (element._id === transactionid) {
 					if (date)
-						element.date = date;
+						y[index].date = date;
 					if (lendamount_singleCustomer)
-						element.lendamount_singleCustomer = lendamount_singleCustomer;
+						y[index].lendamount_singleCustomer = lendamount_singleCustomer;
 					if (takeamount_singleCustomer)
-						element.takeamount_singleCustomer = takeamount_singleCustomer;
+						y[index].takeamount_singleCustomer = takeamount_singleCustomer;
 					if (billdetails)
-						element.billdetails = billdetails;
+						y[index].billdetails = billdetails;
 					if (billNo)
-						element.billNo = billNo;
+						y[index].billNo = billNo;
+					break;
 				}
-				return element;
-			})
-			return { ...state, SingleCustomerTransaction: [...state.SingleCustomerTransaction] };
+			}
+			console.log(y)
+			return {
+				...state, SingleCustomerTransaction: y
+			};
+			// state.SingleCustomerTransaction.map((element) => {
+			// 	if (transactionid === element._id) {
+			// 		if (date)
+			// 			element.date = date;
+			// 		if (lendamount_singleCustomer)
+			// 			element.lendamount_singleCustomer = lendamount_singleCustomer;
+			// 		if (takeamount_singleCustomer)
+			// 			element.takeamount_singleCustomer = takeamount_singleCustomer;
+			// 		if (billdetails)
+			// 			element.billdetails = billdetails;
+			// 		if (billNo)
+			// 			element.billNo = billNo;
+			// 	}
+			// 	return element;
+			// })
+			// return { ...state, SingleCustomerTransaction: [...state.SingleCustomerTransaction] };
 		default:
 			return state;
 	}

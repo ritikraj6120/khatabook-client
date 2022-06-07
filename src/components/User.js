@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleLogout, getUserDetails, changePassword } from '../actions/userAction'
+import { addCustomer } from '../actions/customerAction';
 import { useHistory } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/Send';
 import Box from "@mui/material/Box";
@@ -17,6 +18,7 @@ const User = () => {
 	const dispatch = useDispatch();
 	const userLoginState = useSelector(state => state.userLogin.userInfo)
 	const UserDetailState = useSelector(state => state.userDetails)
+	const customers = useSelector(state => state.getCustomers.customers)
 	const UserDetail = UserDetailState.user
 	let UpdateProfileSuccess = useSelector(state => state.userUpdateProfile.success)
 	const [passwords, setPasswords] = useState({ currentPassword: "", newPassword: "" })
@@ -48,6 +50,19 @@ const User = () => {
 		}
 		dispatch(changePassword(user));
 	};
+	// function alertFunc() {
+	// 	console.log("magic")
+	// 	console.log(customers)
+	// 	console.log("happens")
+	// }
+
+	const handledummy = (e) => {
+		e.preventDefault();
+		console.log("you clicked");
+		dispatch(addCustomer(history, 'mr', 'manish kumar', '+91634333244485023'));
+		// setTimeout(alertFunc, 5000);
+
+	}
 	return (
 		<>
 			{
@@ -134,6 +149,10 @@ const User = () => {
 
 					</Box>
 				</Paper>
+				<Box>
+					<Typography> adding customer</Typography>
+					<Button type="submit" variant="contained" onClick={handledummy}>Submit</Button>
+				</Box>
 			</div>
 		</>
 	)

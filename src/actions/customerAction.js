@@ -93,7 +93,7 @@ export const getCustomers = () => async (dispatch) => {
 	}
 };
 
-export const addCustomer = (history,title, name, phone) => async (dispatch, getState) => {
+export const addCustomer = (history, title, name, phone) => async (dispatch, getState) => {
 	try {
 		dispatch({
 			type: CUSTOMER_ADDING_REQUEST
@@ -106,7 +106,7 @@ export const addCustomer = (history,title, name, phone) => async (dispatch, getS
 			},
 			body: JSON.stringify({ title, name, phone })
 		});
-
+		console.log(response.status)
 		if (response.status === 401) {
 			notifyUnAuthorized("Not Authorized, Login Again ");
 			dispatch({
@@ -134,10 +134,9 @@ export const addCustomer = (history,title, name, phone) => async (dispatch, getS
 				type: CUSTOMER_APPEND_SUCCESS,
 				payload: customer
 			})
-
 			localStorage.setItem("SingleCustomerId", customer._id)
 			notifySuccess("Customer Added Succcessfully")
-			history.push('/singlecustomer')
+			history.push('/customers')
 		}
 
 		else {
@@ -148,6 +147,7 @@ export const addCustomer = (history,title, name, phone) => async (dispatch, getS
 		}
 	}
 	catch (e) {
+		console.log(e)
 		dispatch({
 			type: CUSTOMER_ADDING_FAIL,
 		})
@@ -403,8 +403,11 @@ export const updateCustomerTransaction = (history, transactionid, singlecustomer
 			body: JSON.stringify({ lendamount_singleCustomer, takeamount_singleCustomer, billdetails, billNo, date })
 		});
 		if (response.status === 200) {
+			console.log(response.status)
 			dispatch({ type: SINGLE_CUSTOMER_TRANSACTION_EDIT_SUCCESS })
+			console.log("hihihi")
 			dispatch({ type: SINGLE_CUSTOMER_TRANSACTION_UPDATE_SUCCESS, payload: { transactionid, lendamount_singleCustomer, takeamount_singleCustomer, billdetails, billNo, date } })
+			console.log("hohoho")
 			notifySuccess("Customer Transaction  Updated Succcessfully")
 			history.push('/singlecustomer');
 		}
@@ -422,6 +425,7 @@ export const updateCustomerTransaction = (history, transactionid, singlecustomer
 		}
 	}
 	catch (error) {
+		console.log(error);
 		dispatch({
 			type: SINGLE_CUSTOMER_TRANSACTION_EDIT_FAIL,
 			payload: "Customer Transaction Updation Failed"
@@ -466,9 +470,3 @@ export const getCustomerBalance = () => async (dispatch) => {
 		notifyError("Customer Balance Fetching Failed");
 	}
 }
-
-
-
-
-
-

@@ -26,24 +26,25 @@ const theme = createTheme({
 const Customers = () => {
 	let history = useHistory();
 	const dispatch = useDispatch();
-	const userLoginState = useSelector(state => state.userLogin.userInfo)
+	const userLoginState = useSelector(state => state.userLogin)
+	const userLoginInfo=userLoginState.userInfo
 	const customersState = useSelector(state => state.getCustomers)
 	const customerBalanceState = useSelector(state => state.getCustomerBalance)
 	const { customerBalance } = customerBalanceState;
 	const { customers } = customersState
 	useEffect(() => {
-		if (userLoginState !== null) {
+		if (userLoginInfo !== null) {
 			dispatch(getCustomers());
 			dispatch(getCustomerBalance());
 		}
 		else {
 			dispatch(handleLogout(history));
 		}
-	}, [userLoginState])
+	}, [userLoginInfo])
 	let TotalAmounttoget = 0;
 	let TotalAmounttogive = 0;
 	let netBalance = 0;
-	if (customerBalanceState.loading === false) {
+	if (customerBalanceState.loading === false && customerBalanceState.error === null) {
 		for (let i = 0; i < customerBalance.length; i++) {
 			let x = customerBalance[i].amounttoget - customerBalance[i].amounttogive;
 			netBalance += x;
@@ -59,13 +60,20 @@ const Customers = () => {
 	function handleClick(e) {
 		history.push('/addcustomer');
 	}
+	// const comps = [1, 2, 3, 4];// 1 for most recent 2 for oldest
+	// function compare(a, b,choice) {
+	// 	if(choice===1)
+	// 	return new Date(b.date) - new Date(a.date);
+	// 	else if(choice===2){
+	// 		return new Date(a.date) - new Date(b.date);
+	// 	}
+	// }
 	return (
 		<>
 			{
-				(customerBalanceState.loading || customersState.loading) ? <CircularProgress color="secondary" /> :
+				(customerBalanceState.loading === false && customersState.loading === false && customerBalanceState.error === null && customersState.error === null) ?
 					<>
 						<Grid container sx={{ marginTop: "1vw" }}  >
-
 
 							<Grid item xs={9} sx={{ overflowY: "auto", maxHeight: "90vh", backgroundColor: "#efefef" }}>
 								<Box sx={{ height: "10vh", margin: "0px 14px", marginTop: "16px", marginBottom: "8px", display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between' }} >
@@ -83,7 +91,7 @@ const Customers = () => {
 										</Button>
 									</ThemeProvider>
 								</Box>
-								<Box sx={{ display: 'flex', flexDirection: 'column', margin: "0px 14px", marginBottom:"2vh"}}>
+								<Box sx={{ display: 'flex', flexDirection: 'column', margin: "0px 14px", marginBottom: "2vh" }}>
 									{customers.map((customer) => {
 										return <CustomerItem key={customer._id} customer={customer} customerBalance={customerBalance} />
 									})}
@@ -95,7 +103,7 @@ const Customers = () => {
 								<Card variant="outlined" sx={{ textAlign: 'center', maxHeight: "60vh", overflowY: "auto" }}>
 
 									<AccountBalanceWalletIcon sx={{ bgcolor: "#f2f1c4", color: "#ecac38f5", width: "4rem", height: "4rem", marginBottom: "16px", marginTop: "2vw", borderRadius: "4rem" }} />
-									<CardContent sx={{ padding: 0 ,paddingBottom:0 }}>
+									<CardContent sx={{ padding: 0, paddingBottom: 0 }}>
 										<Typography variant="h6" sx={{ fontSize: 20 }}>
 											Net Balance
 										</Typography>
@@ -179,7 +187,7 @@ const Customers = () => {
 										</div>
 									</div>
 								</div> */}
-					</>
+					</> : <CircularProgress color="secondary" />
 			}
 			{/* <Link to="/addcustomer">
 				<button type="button" className="btn  sticky-btn">

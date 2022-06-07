@@ -15,21 +15,22 @@ const SingleCustomerReport = () => {
 	let history = useHistory();
 	const dispatch = useDispatch();
 	const singlecustomerid = localStorage.getItem('SingleCustomerId');
-	const userLoginState = useSelector(state => state.userLogin.userInfo)
+	const userLoginState = useSelector(state => state.userLogin)
+	const userLoginInfo = userLoginState.userInfo
 	const SingleCustomerTransactionState = useSelector(state => state.singleCustomerTransactions);
 	const singleCustomerDetail = useSelector(state => state.SingleCustomerDetail)
 	const { SingleCustomerTransaction } = SingleCustomerTransactionState;
 	const { singleCustomer } = singleCustomerDetail;
 
 	useEffect(() => {
-		if (userLoginState !== null) {
+		if (userLoginInfo !== null) {
 			dispatch(getSingleCustomerTransactions(singlecustomerid));
 			dispatch(getSingleCustomerDetail(singlecustomerid));
 		}
 		else {
 			dispatch(handleLogout(history))
 		}
-	}, [userLoginState])
+	}, [userLoginInfo])
 
 	let yougave = 0, yougot = 0, netbalance = 0;
 	let x;

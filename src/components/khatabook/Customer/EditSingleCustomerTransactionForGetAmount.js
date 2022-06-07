@@ -91,7 +91,7 @@ const EditSingleCustomerTransactionForGaveAmount = () => {
 					<>
 						<div>
 							<Breadcrumbs separator="›" sx={{ padding: 2 }} aria-label="breadcrumb">
-								<Link underline="hover" color="inherit" to="/custmers">
+								<Link underline="hover" color="inherit" to="/customers">
 									Customers List
 								</Link>
 								<Link

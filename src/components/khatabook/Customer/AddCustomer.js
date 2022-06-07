@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link,useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { addCustomer } from '../../../actions/customerAction';
 import { useDispatch } from 'react-redux';
 
@@ -25,12 +25,11 @@ const Navbar2 = () => {
 
 const AddCustomer = () => {
 	const dispatch = useDispatch()
-	let history=useHistory();
+	let history = useHistory();
 	const [phone, setPhone] = useState('')
 	const [customer, setCustomer] = useState({ title: "Mr", name: "" });
 	const onChange = (e) => {
 		setCustomer({ ...customer, [e.target.name]: e.target.value })
-
 	}
 
 	const handleSubmit = async (e) => {
@@ -50,7 +49,7 @@ const AddCustomer = () => {
 			notifyWarning("Enter valid phone Number");
 		}
 		else {
-			dispatch(addCustomer(history,customer.title, customer.name, phone));
+			dispatch(addCustomer(history, customer.title, customer.name, phone));
 		}
 	}
 
@@ -89,7 +88,7 @@ const AddCustomer = () => {
 					<div className="col-sm col-lg-4">
 						<label htmlFor="phone">Enter Phone No.</label>
 						<PhoneInput
-							international
+							country="IN"
 							defaultCountry="IN"
 							placeholder="Enter Phone Number"
 							className="form-control"

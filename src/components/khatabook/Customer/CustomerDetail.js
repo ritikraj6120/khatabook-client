@@ -21,7 +21,8 @@ const CustomerDetail = (props) => {
 	let { singleCustomer } = props;
 	let history = useHistory();
 	const dispatch = useDispatch();
-	const userLoginState = useSelector(state => state.userLogin.userInfo)
+	const userLoginState = useSelector(state => state.userLogin)
+	const userLoginInfo = userLoginState.userInfo
 	const customerBalanceState = useSelector(state => state.getCustomerBalance)
 	const singleCustomerTransactionsState = useSelector(state => state.singleCustomerTransactions)
 	const { SingleCustomerTransaction } = singleCustomerTransactionsState
@@ -45,13 +46,13 @@ const CustomerDetail = (props) => {
 	// }, [singleCustomer]);
 
 	useEffect(() => {
-		if (userLoginState !== null) {
+		if (userLoginInfo !== null) {
 			dispatch(getCustomerBalance());
 		}
 		else {
 			dispatch(handleLogout(history));
 		}
-	}, [userLoginState, SingleCustomerTransaction])
+	}, [userLoginInfo, SingleCustomerTransaction])
 
 	const onChange = (e) => {
 		setCredentials({ ...credentials, [e.target.name]: e.target.value })
@@ -84,9 +85,9 @@ const CustomerDetail = (props) => {
 		}
 		else {
 			dispatch(editCustomer(singleCustomer._id, etitle, ename, phone));
-			singleCustomer = { ...singleCustomer, title: etitle, name: ename, phone: phone };
+			// singleCustomer = { ...singleCustomer, title: etitle, name: ename, phone: phone };
 			refClose.current.click();
-			window.location.reload();
+			// window.location.reload();
 		}
 	}
 	const updateCustomerProfile = () => {
@@ -168,6 +169,7 @@ const CustomerDetail = (props) => {
 				</div>
 			</div>
 			{/* modal ends */}
+			
 			<Card variant="outlined" sx={{ textAlign: 'center', maxHeight: "60vh", overflowY: "auto" }}>
 				<Grid container spacing={2}>
 					<Grid item xs={9} >

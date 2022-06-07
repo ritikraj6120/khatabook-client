@@ -40,7 +40,7 @@ const CustomerItem = (props) => {
 						<Avatar sx={{ bgcolor: "#186fd9", width: 40, height: 40, marginLeft: "1vw", fontSize: 16 }}>
 							{stringAvatar(name)}
 						</Avatar>
-						<Typography sx={{ marginLeft: "3vh" }} variant="h6">{name}</Typography>
+						<Typography sx={{ marginLeft: "3vh", fontSize: 16, fontWeight: "500", textTransform: "none" }} variant="body1">{name}</Typography>
 					</Box>
 					<Box sx={{ display: 'flex', flexDirection: 'column' }}>
 						<Typography sx={{ fontSize: 24, fontWeight: "bold", color: `${x >= 0 ? "#C82128" : "0F814D"}` }}>
@@ -52,7 +52,7 @@ const CustomerItem = (props) => {
 						</Typography>
 					</Box>
 				</Button>
-				<Divider/>
+				<Divider />
 			</ThemeProvider>
 			{/* <button className="btn btn-outline-dark" onClick={edit}>
 				<div className="d-flex bd-highlight">
