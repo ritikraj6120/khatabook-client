@@ -56,13 +56,13 @@ const User = () => {
 	// 	console.log("happens")
 	// }
 
-	const handledummy = (e) => {
-		e.preventDefault();
-		console.log("you clicked");
-		dispatch(addCustomer(history, 'mr', 'manish kumar', '+91634333244485023'));
-		// setTimeout(alertFunc, 5000);
+	// const handledummy = (e) => {
+	// 	e.preventDefault();
+	// 	console.log("you clicked");
+	// 	dispatch(addCustomer(history, 'mr', 'manish kumar', '+91634333244485023'));
+	// 	// setTimeout(alertFunc, 5000);
 
-	}
+	// }
 	return (
 		<>
 			{
@@ -149,10 +149,10 @@ const User = () => {
 
 					</Box>
 				</Paper>
-				<Box>
+				{/* <Box>
 					<Typography> adding customer</Typography>
 					<Button type="submit" variant="contained" onClick={handledummy}>Submit</Button>
-				</Box>
+				</Box> */}
 			</div>
 		</>
 	)

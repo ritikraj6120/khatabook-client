@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import CustomerItem from './CustomerItem';
 import { useHistory } from 'react-router-dom'
+// import {Spinner} from '../../Spinner'
 import { useDispatch, useSelector } from 'react-redux';
 import { getCustomers, getCustomerBalance } from '../../../actions/customerAction';
 import { handleLogout } from '../../../actions/userAction'
@@ -27,7 +28,7 @@ const Customers = () => {
 	let history = useHistory();
 	const dispatch = useDispatch();
 	const userLoginState = useSelector(state => state.userLogin)
-	const userLoginInfo=userLoginState.userInfo
+	const userLoginInfo = userLoginState.userInfo
 	const customersState = useSelector(state => state.getCustomers)
 	const customerBalanceState = useSelector(state => state.getCustomerBalance)
 	const { customerBalance } = customerBalanceState;
@@ -187,7 +188,7 @@ const Customers = () => {
 										</div>
 									</div>
 								</div> */}
-					</> : <CircularProgress color="secondary" />
+					</> : <CircularProgress />
 			}
 			{/* <Link to="/addcustomer">
 				<button type="button" className="btn  sticky-btn">

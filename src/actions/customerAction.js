@@ -42,6 +42,9 @@ import {
 	SINGLE_CUSTOMER_DETAILS_FETCH_SUCCESS,
 	SINGLE_CUSTOMER_DETAILS_FETCH_ERROR,
 
+	SINGLE_CUSTOMER_DETAILS_UPDATE_SUCCESS,
+	SINGLE_CUSTOMER_DETAILS_DELETE_SUCCESS,
+
 } from "../constants/customerConstant";
 import { handleLogout } from './userAction'
 import { notifyError, notifySuccess, notifyUnAuthorized, notifyWarning } from '../alert';
@@ -106,7 +109,7 @@ export const addCustomer = (history, title, name, phone) => async (dispatch, get
 			},
 			body: JSON.stringify({ title, name, phone })
 		});
-		console.log(response.status)
+		// console.log(response.status)
 		if (response.status === 401) {
 			notifyUnAuthorized("Not Authorized, Login Again ");
 			dispatch({
@@ -184,8 +187,10 @@ export const editCustomer = (id, title, name, phone) => async (dispatch) => {
 			notifyWarning("No Customer found with this name")
 		}
 		else if (response.status === 200) {
+			// console.log(id, title, name, phone)
 			dispatch({ type: CUSTOMER_EDIT_SUCCESS })
 			dispatch({ type: CUSTOMER_UPDATE_SUCCESS, payload: { id, title, name, phone } })
+			dispatch({ type: SINGLE_CUSTOMER_DETAILS_UPDATE_SUCCESS, payload: { id, title, name, phone } });
 			notifySuccess("Customer Details Updated  Succcessfully")
 		}
 		else {
@@ -216,6 +221,7 @@ export const deleteCustomer = (id, history) => async (dispatch) => {
 				"auth-token": localStorage.getItem('token')
 			}
 		});
+		// console.log("response code is", response.status);
 		if (response.status === 400 || response.status === 401) {
 			notifyUnAuthorized("Not Authorized, Login Again");
 			dispatch({
@@ -232,8 +238,15 @@ export const deleteCustomer = (id, history) => async (dispatch) => {
 			notifyWarning("No Customer found with this name")
 		}
 		else if (response.status === 200) {
+			// console.log("dispatch CUSTOMER_DELETE_SUCCESS starts")
 			dispatch({ type: CUSTOMER_DELETE_SUCCESS })
+			// console.log("dispatch CUSTOMER_DELETE_SUCCESS ends")
+			// console.log("dispatch CUSTOMER_REMOVE_SUCCESS starts")
 			dispatch({ type: CUSTOMER_REMOVE_SUCCESS, payload: id })
+			// console.log("dispatch CUSTOMER_REMOVE_SUCCESS ends")
+			// console.log("dispatch SINGLE_CUSTOMER_DETAILS_DELETE_SUCCESS starts")
+			dispatch({ type: SINGLE_CUSTOMER_DETAILS_DELETE_SUCCESS });
+			// console.log("dispatch SINGLE_CUSTOMER_DETAILS_DELETE_SUCCESS ends")
 			notifySuccess("Customer Deleted Succcessfully")
 			history.push('/customers');
 		}
@@ -271,7 +284,6 @@ export const getSingleCustomerDetail = (id) => async (dispatch) => {
 				payload: "No Customer found with this name"
 			});
 			notifyWarning("No Customer found with this name")
-			// setTimeout(function () { history.push('/customers') }, 1000);
 		}
 		else if (response.status === 401) {
 			dispatch({
@@ -403,11 +415,11 @@ export const updateCustomerTransaction = (history, transactionid, singlecustomer
 			body: JSON.stringify({ lendamount_singleCustomer, takeamount_singleCustomer, billdetails, billNo, date })
 		});
 		if (response.status === 200) {
-			console.log(response.status)
+			// console.log(response.status)
 			dispatch({ type: SINGLE_CUSTOMER_TRANSACTION_EDIT_SUCCESS })
-			console.log("hihihi")
+			// console.log("hihihi")
 			dispatch({ type: SINGLE_CUSTOMER_TRANSACTION_UPDATE_SUCCESS, payload: { transactionid, lendamount_singleCustomer, takeamount_singleCustomer, billdetails, billNo, date } })
-			console.log("hohoho")
+			// console.log("hohoho")
 			notifySuccess("Customer Transaction  Updated Succcessfully")
 			history.push('/singlecustomer');
 		}

@@ -28,14 +28,16 @@ const SingleCustomer = () => {
 	const userLoginState = useSelector(state => state.userLogin)
 	const userLoginInfo = userLoginState.userInfo
 	const SingleCustomerTransactionState = useSelector(state => state.singleCustomerTransactions);
-	const customerState = useSelector(state => state.getCustomers)
-	const singleCustomer = customerState.customers.find(customer => customer._id === singlecustomerid)
+	// const customerState = useSelector(state => state.getCustomers)
+	// const singleCustomer = customerState.customers.find(customer => customer._id === singlecustomerid)
+	const singleCustomerDetails = useSelector(state => state.SingleCustomerDetail)
+	const { loading, singleCustomer, error } = singleCustomerDetails;
 	const { SingleCustomerTransaction } = SingleCustomerTransactionState
 
 	useEffect(() => {
 		if (userLoginInfo !== null) {
 			dispatch(getSingleCustomerTransactions(singlecustomerid));
-			// dispatch(getSingleCustomerDetail(singlecustomerid))
+			dispatch(getSingleCustomerDetail(singlecustomerid))
 		}
 		else {
 			dispatch(handleLogout(history));
@@ -68,8 +70,7 @@ const SingleCustomer = () => {
 	return (
 		<>
 			{
-				(SingleCustomerTransactionState.loading) ?
-					<CircularProgress /> :
+				(!SingleCustomerTransactionState.loading && !loading && !error && !SingleCustomerTransactionState.error) ?
 					<>
 						<Grid container spacing={2} sx={{}}>
 							<Grid item xs={9} sx={{ overflowY: "auto", maxHeight: "90vh" }}>
@@ -180,6 +181,8 @@ const SingleCustomer = () => {
 							</Grid>
 						</Grid>
 					</>
+					:
+					<CircularProgress />
 			}
 		</>
 	);

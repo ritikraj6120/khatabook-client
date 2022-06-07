@@ -41,6 +41,9 @@ import {
 	SINGLE_CUSTOMER_DETAILS_FETCH_REQUEST,
 	SINGLE_CUSTOMER_DETAILS_FETCH_SUCCESS,
 	SINGLE_CUSTOMER_DETAILS_FETCH_ERROR,
+
+	SINGLE_CUSTOMER_DETAILS_UPDATE_SUCCESS,
+	SINGLE_CUSTOMER_DETAILS_DELETE_SUCCESS,
 } from "../constants/customerConstant";
 
 export const getCustomersReducer = (state = { loading: true, customers: [], error: null }, action) => {
@@ -165,6 +168,20 @@ export const getSingleCustomerDetailReducer = (state = { loading: true, singleCu
 			return { ...state, loading: false, singleCustomer: action.payload, error: null };
 		case SINGLE_CUSTOMER_DETAILS_FETCH_ERROR:
 			return { ...state, loading: false, singleCustomer: null, error: action.payload };
+		case SINGLE_CUSTOMER_DETAILS_UPDATE_SUCCESS:
+			let x = state.singleCustomer;
+			let { title, name, phone } = action.payload;
+			console.log(title, name, phone)
+			x.title = title;
+			x.name = name;
+			x.phone = phone;
+			console.log("shyam")
+			console.log(action.payload);
+			console.log(x)
+			return { ...state, singleCustomer: x };
+
+		case SINGLE_CUSTOMER_DETAILS_DELETE_SUCCESS:
+			return { ...state, loading: true, singleCustomer: null, error: null };
 		default:
 			return state;
 	}
@@ -196,7 +213,7 @@ export const singleCustomerTransactionsReducer = (state = { loading: true, Singl
 
 			let { transactionid, lendamount_singleCustomer, takeamount_singleCustomer, billdetails, billNo, date } = action.payload
 			let y = state.SingleCustomerTransaction
-			console.log("wala wala")
+			// console.log("wala wala")
 			for (let index = 0; index < y.length; index++) {
 				const element = y[index];
 				if (element._id === transactionid) {
@@ -213,26 +230,26 @@ export const singleCustomerTransactionsReducer = (state = { loading: true, Singl
 					break;
 				}
 			}
-			console.log(y)
+			// console.log(y)
 			return {
 				...state, SingleCustomerTransaction: y
 			};
-			// state.SingleCustomerTransaction.map((element) => {
-			// 	if (transactionid === element._id) {
-			// 		if (date)
-			// 			element.date = date;
-			// 		if (lendamount_singleCustomer)
-			// 			element.lendamount_singleCustomer = lendamount_singleCustomer;
-			// 		if (takeamount_singleCustomer)
-			// 			element.takeamount_singleCustomer = takeamount_singleCustomer;
-			// 		if (billdetails)
-			// 			element.billdetails = billdetails;
-			// 		if (billNo)
-			// 			element.billNo = billNo;
-			// 	}
-			// 	return element;
-			// })
-			// return { ...state, SingleCustomerTransaction: [...state.SingleCustomerTransaction] };
+		// state.SingleCustomerTransaction.map((element) => {
+		// 	if (transactionid === element._id) {
+		// 		if (date)
+		// 			element.date = date;
+		// 		if (lendamount_singleCustomer)
+		// 			element.lendamount_singleCustomer = lendamount_singleCustomer;
+		// 		if (takeamount_singleCustomer)
+		// 			element.takeamount_singleCustomer = takeamount_singleCustomer;
+		// 		if (billdetails)
+		// 			element.billdetails = billdetails;
+		// 		if (billNo)
+		// 			element.billNo = billNo;
+		// 	}
+		// 	return element;
+		// })
+		// return { ...state, SingleCustomerTransaction: [...state.SingleCustomerTransaction] };
 		default:
 			return state;
 	}

@@ -1,6 +1,6 @@
 import NoteContext from "./noteContext";
 import UserContext from "./UserContext";
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import { notifySuccess, notifyError, notifyWarning, notifyUnAuthorized } from "../alert.js"
 const NoteState = (props) => {
 	const host = "https://khatabook-app.herokuapp.com"
@@ -131,7 +131,8 @@ const NoteState = (props) => {
 				}
 			}
 			setNotes(newNotes);
-			notifySuccess("Note Updated Succcessfully")
+			if (important === null && completed === null)
+				notifySuccess("Note Updated Succcessfully")
 		}
 		else {
 			notifyError("Some Error happenend at Server side");

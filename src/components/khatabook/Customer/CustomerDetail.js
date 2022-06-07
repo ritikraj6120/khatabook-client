@@ -109,6 +109,7 @@ const CustomerDetail = (props) => {
 
 	const handleDelete = (e) => {
 		e.preventDefault();
+		console.log("dispatched deletecustomer")
 		dispatch(deleteCustomer(singleCustomer._id, history));
 		localStorage.removeItem('SingleCustomerId');
 	}
@@ -169,7 +170,7 @@ const CustomerDetail = (props) => {
 				</div>
 			</div>
 			{/* modal ends */}
-			
+
 			<Card variant="outlined" sx={{ textAlign: 'center', maxHeight: "60vh", overflowY: "auto" }}>
 				<Grid container spacing={2}>
 					<Grid item xs={9} >
@@ -280,30 +281,6 @@ const CustomerDetail = (props) => {
 				</Box>
 				{/* </CardActions> */}
 			</Card >
-			{/* <div className="form-row align-items-center">
-				<form >
-					<div className="col-sm-3 my-1">
-						<label className="sr-only" htmlFor="inlineFormInputName">Title</label>
-						<select className="form-control" id="inlineFormInputName"
-							name="title" placeholder="Title" value={credentials.title} onChange={onChange} >
-							<option value="Mr">Mr</option>
-							<option value="Mrs">Mrs</option>
-						</select>
-					</div>
-					<div className="col-sm-3 my-1">
-						<label className="sr-only" htmlFor="inlineFormInputName">Name</label>
-						<input type="text" className="form-control" id="inlineFormInputName" name="name" placeholder="Name" value={credentials.name} onChange={onChange} required />
-					</div>
-					<div className="col-sm-3 my-1">
-						<label className="sr-only" htmlFor="inlineFormInputName">Phone</label>
-						<input type="tel" className="form-control" id="inlineFormInputName" name="phone" placeholder="Phone" value={credentials.phone} onChange={onChange} required />
-					</div>
-				</form>
-				<Stack spacing={2} direction="row">
-					<Button onClick={handleUpdate} variant="contained">Update</Button>
-					<Button onClick={handleDelete} variant="contained">Delete Customer</Button>
-				</Stack>
-			</div> */}
 		</>
 	)
 }

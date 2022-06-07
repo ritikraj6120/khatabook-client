@@ -35,7 +35,7 @@ const Notes = () => {
 			notifyWarning("Description length less than 5");
 		}
 		else {
-			editNote(note.id, note.etitle, note.edescription, note.etag)
+			editNote(note.id, note.etitle, note.edescription, note.etag,null,null)
 			refClose.current.click();
 
 		}
