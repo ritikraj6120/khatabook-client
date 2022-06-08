@@ -96,7 +96,7 @@ export const getCustomers = () => async (dispatch) => {
 	}
 };
 
-export const addCustomer = (history, title, name, phone) => async (dispatch, getState) => {
+export const addCustomer = (history, name, phone) => async (dispatch, getState) => {
 	try {
 		dispatch({
 			type: CUSTOMER_ADDING_REQUEST
@@ -107,7 +107,7 @@ export const addCustomer = (history, title, name, phone) => async (dispatch, get
 				'Content-Type': 'application/json',
 				"auth-token": localStorage.getItem('token')
 			},
-			body: JSON.stringify({ title, name, phone })
+			body: JSON.stringify({ name, phone })
 		});
 		// console.log(response.status)
 		if (response.status === 401) {
@@ -122,9 +122,9 @@ export const addCustomer = (history, title, name, phone) => async (dispatch, get
 		else if (response.status === 409) {
 			dispatch({
 				type: CUSTOMER_ADDING_FAIL,
-				payload: "Customer Already Exists"
+				payload: "Customer With Similar Phone No. Already Exists"
 			});
-			notifyWarning("Customer Already Exists")
+			notifyWarning("Customer With Similar Phone No. Already Exists")
 		}
 
 		else if (response.status === 200) {
@@ -158,7 +158,7 @@ export const addCustomer = (history, title, name, phone) => async (dispatch, get
 	}
 }
 
-export const editCustomer = (id, title, name, phone) => async (dispatch) => {
+export const editCustomer = (id, name, phone) => async (dispatch) => {
 	try {
 		dispatch({
 			type: CUSTOMER_EDIT_REQUEST
@@ -169,7 +169,7 @@ export const editCustomer = (id, title, name, phone) => async (dispatch) => {
 				'Content-Type': 'application/json',
 				"auth-token": localStorage.getItem('token')
 			},
-			body: JSON.stringify({ title, name, phone })
+			body: JSON.stringify({ name, phone })
 		});
 		if (response.status === 401) {
 			notifyUnAuthorized("Not Authorized, Login Again ");
@@ -186,11 +186,18 @@ export const editCustomer = (id, title, name, phone) => async (dispatch) => {
 			})
 			notifyWarning("No Customer found with this name")
 		}
+		else if (response.status === 409) {
+			dispatch({
+				type: CUSTOMER_EDIT_FAIL,
+				payload: "Customer with given Phone number  already exist"
+			})
+			notifyError("Customer with given Phone number  already exist")
+		}
 		else if (response.status === 200) {
 			// console.log(id, title, name, phone)
 			dispatch({ type: CUSTOMER_EDIT_SUCCESS })
-			dispatch({ type: CUSTOMER_UPDATE_SUCCESS, payload: { id, title, name, phone } })
-			dispatch({ type: SINGLE_CUSTOMER_DETAILS_UPDATE_SUCCESS, payload: { id, title, name, phone } });
+			dispatch({ type: CUSTOMER_UPDATE_SUCCESS, payload: { id, name, phone } })
+			dispatch({ type: SINGLE_CUSTOMER_DETAILS_UPDATE_SUCCESS, payload: { id, name, phone } });
 			notifySuccess("Customer Details Updated  Succcessfully")
 		}
 		else {
@@ -353,7 +360,7 @@ export const getSingleCustomerTransactions = (id) => async (dispatch) => {
 
 }
 
-export const addSingleCustomerTransaction = (id, lendamount_singleCustomer, takeamount_singleCustomer, billDetails, billNo, date) => async (dispatch) => {
+export const addSingleCustomerTransaction = (history, id, lendamount_singleCustomer, takeamount_singleCustomer, billDetails, billNo, date) => async (dispatch) => {
 	try {
 		if (billDetails === "")
 			billDetails = null
@@ -384,6 +391,7 @@ export const addSingleCustomerTransaction = (id, lendamount_singleCustomer, take
 				payload: newCustomertransaction
 			})
 			notifySuccess("Customer Transaction Added Succcessfully")
+			history.push('/singlecustomer')
 		}
 		else {
 			dispatch({

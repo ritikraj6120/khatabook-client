@@ -61,8 +61,8 @@ const AddNewTransactionForCustomerGave = () => {
 	}
 	const handlesubmit = (e) => {
 		e.preventDefault();
-		dispatch(addSingleCustomerTransaction(singleCustomer._id, parseInt(newTransaction), 0, newTransactionBilldetails, addBillNo, newTransactiondate));
-		history.push('/singlecustomer')
+		dispatch(addSingleCustomerTransaction(history,singleCustomer._id, parseInt(newTransaction), 0, newTransactionBilldetails, addBillNo, newTransactiondate));
+		// history.push('/singlecustomer')
 	}
 
 	return (

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleLogout, getUserDetails, changePassword } from '../actions/userAction'
-import { addCustomer } from '../actions/customerAction';
 import { useHistory } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/Send';
 import Box from "@mui/material/Box";
@@ -18,7 +17,6 @@ const User = () => {
 	const dispatch = useDispatch();
 	const userLoginState = useSelector(state => state.userLogin.userInfo)
 	const UserDetailState = useSelector(state => state.userDetails)
-	const customers = useSelector(state => state.getCustomers.customers)
 	const UserDetail = UserDetailState.user
 	let UpdateProfileSuccess = useSelector(state => state.userUpdateProfile.success)
 	const [passwords, setPasswords] = useState({ currentPassword: "", newPassword: "" })
@@ -158,4 +156,3 @@ const User = () => {
 	)
 }
 export default User;
-

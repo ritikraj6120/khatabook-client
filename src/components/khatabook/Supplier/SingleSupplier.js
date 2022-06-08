@@ -1,6 +1,8 @@
-import React, { useContext, useEffect } from 'react';
-import SupplierContext from '../../../context/SupplierContext';
-import { useHistory,Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSingleSupplierTransactions, getSingleSupplierDetail } from '../../../actions/supplierAction'
+import { handleLogout } from '../../../actions/userAction'
+import { useHistory, Link } from 'react-router-dom';
 import '../style.css';
 import SupplierDetail from './SupplierDetail';
 import { Typography, Button, CircularProgress, Table, TableRow, TableHead, TableBody, TableCell, } from '@mui/material';
@@ -21,21 +23,28 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const SingleSupplier = () => {
 	let history = useHistory();
-	const { SingleSupplierTransaction, getSingleSupplierTransactions, getSingleSupplierDetail, singleSupplierDetail, setSingleTransactionOfParticularSupplier } = useContext(SupplierContext);
-	const { singleSupplier, loading } = singleSupplierDetail;
-	const singlesupplierid = JSON.parse(localStorage.getItem('SingleSupplierId'));
+	const dispatch = useDispatch();
+	const singlesupplierid = localStorage.getItem('SingleSupplierId');
+	const userLoginState = useSelector(state => state.userLogin)
+	const userLoginInfo = userLoginState.userInfo
+	const SingleSupplierTransactionState = useSelector(state => state.singleSupplierTransactions);
+	const singleSupplierDetails = useSelector(state => state.SingleSupplierDetail)
+	const { loading, singleSupplier, error } = singleSupplierDetails;
+	const { SingleSupplierTransaction } = SingleSupplierTransactionState
+
 
 	useEffect(() => {
-		getSingleSupplierTransactions(singlesupplierid);
-		getSingleSupplierDetail(singlesupplierid);
-		// eslint-disable-next-line
-	}, [])
-
+		if (userLoginInfo !== null) {
+			dispatch(getSingleSupplierTransactions(singlesupplierid));
+			dispatch(getSingleSupplierDetail(singlesupplierid))
+		}
+		else {
+			dispatch(handleLogout(history));
+		}
+	}, [userLoginInfo])
 
 	const handleEditSupplier = async (item) => {
-		await setSingleTransactionOfParticularSupplier({ ...item })
 		if (item.purchase_singleSupplier > 0) {
-
 			history.push('/editsinglesuppliertransactionforpurchase', {
 				transactionid: item._id, name: singleSupplier.name, ...item
 			});
@@ -61,7 +70,7 @@ const SingleSupplier = () => {
 	return (
 		<>
 			{
-				loading === true ? <CircularProgress color="secondary" /> :
+				(!SingleSupplierTransactionState.loading && !loading && !error && !SingleSupplierTransactionState.error) ?
 					<>
 
 						<Grid container spacing={2} sx={{}}>
@@ -186,6 +195,7 @@ const SingleSupplier = () => {
 									</CardContent>
 								</Card> */}
 					</>
+					:<CircularProgress color="secondary" /> 
 			}
 		</>
 	);

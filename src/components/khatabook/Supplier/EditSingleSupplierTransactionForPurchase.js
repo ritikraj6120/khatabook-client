@@ -1,18 +1,19 @@
-import React, { useContext, useState, useEffect } from 'react';
-import SupplierContext from '../../../context/SupplierContext';
-import { useHistory, useLocation, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { updateSupplierTransaction } from '../../../actions/supplierAction';
+import { useDispatch } from 'react-redux';
+import { useLocation, Link, useHistory } from 'react-router-dom';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import DeleteIcon from '@mui/icons-material/Delete';
 import '../style.css';
-// import Navbar from '../Navbar';
 import { CircularProgress, Button, TextField, Typography, Breadcrumbs } from '@mui/material';
 const EditSingleSupplierTransactionForPurchase = () => {
+	let history = useHistory();
+	const dispatch = useDispatch();
 	const location = useLocation();
 	const { transactionid, name, ...item } = location.state;
-	const { updateSupplierTransaction } = useContext(SupplierContext);
-	const singlesupplierid = JSON.parse(localStorage.getItem('SingleSupplierId'));
+	const singlesupplierid = localStorage.getItem('SingleSupplierId');
 
 	const errorStateinit = {
 		amountError: null
@@ -81,15 +82,15 @@ const EditSingleSupplierTransactionForPurchase = () => {
 		}
 	}
 
-	const handleSubmit = async (e) => {
+	const handleSubmit =  (e) => {
 		e.preventDefault();
-		await updateSupplierTransaction(transactionid, singlesupplierid, parseInt(newTransaction), 0, newTransactionBilldetails, addBillNo, newTransactiondate);
+		dispatch(updateSupplierTransaction(history,transactionid, singlesupplierid, parseInt(newTransaction), 0, newTransactionBilldetails, addBillNo, newTransactiondate));
 	}
 
 	return (
 		<>
-			{/* <Navbar a="/singlecustomer" b="/singlesupplier" /> */}
-			{loading === true ? <CircularProgress /> :
+			{
+				loading === true ? <CircularProgress /> :
 				<>
 					<div>
 						<Breadcrumbs separator="›" sx={{ padding: 2 }} aria-label="breadcrumb">

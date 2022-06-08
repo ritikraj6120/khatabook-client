@@ -1,6 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
-import SupplierContext from '../../../context/SupplierContext';
+import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSingleSupplierTransactions, getSingleSupplierDetail } from '../../../actions/supplierAction';
+import { handleLogout } from '../../../actions/userAction'
 import { Typography, Button, CircularProgress, AppBar, Table, TableRow, TableHead, TableBody, TableCell, Toolbar, IconButton, Card, CardContent } from '@mui/material';
 import { Box } from '@mui/system';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -8,19 +10,31 @@ import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import generatePDF from './pdfGeneration_singleSupplier';
-const SingleCustomerReport = () => {
+const SingleSupplierReport = () => {
 	let history = useHistory();
-	const { SingleSupplierTransaction, getSingleSupplierTransactions, getSingleSupplierDetail, singleSupplierDetail } = useContext(SupplierContext);
-	const { singleSupplier, loading } = singleSupplierDetail;
-	const singlesupplierid = JSON.parse(localStorage.getItem('SingleSupplierId'));
+	const dispatch = useDispatch();
+	const singlesupplierid = localStorage.getItem('SingleSupplierId');
+	const userLoginState = useSelector(state => state.userLogin)
+	const userLoginInfo = userLoginState.userInfo
+	const SingleSupplierTransactionState = useSelector(state => state.singleSupplierTransactions);
+	const singleSupplierDetail = useSelector(state => state.SingleSupplierDetail)
+	const { SingleSupplierTransaction } = SingleSupplierTransactionState;
+	const { singleSupplier } = singleSupplierDetail;
+
+
 	useEffect(() => {
-		getSingleSupplierTransactions(singlesupplierid);
-		getSingleSupplierDetail(singlesupplierid);
-		// eslint-disable-next-line
-	}, [])
+		if (userLoginInfo !== null) {
+			dispatch(getSingleSupplierTransactions(singlesupplierid));
+			dispatch(getSingleSupplierDetail(singlesupplierid));
+		}
+		else {
+			dispatch(handleLogout(history))
+		}
+	}, [userLoginInfo])
+
 	let payment = 0, purchase = 0, netbalance = 0;
 	let x;
-	if (loading === false) {
+	if (SingleSupplierTransactionState.loading === false) {
 		// can apply conddition but not of much otimisation
 		for (let i = 0; i < SingleSupplierTransaction.length; i++) {
 			payment += SingleSupplierTransaction[i].payment_singleSupplier;
@@ -55,7 +69,7 @@ const SingleCustomerReport = () => {
 	return (
 		<>
 			{
-				loading === true ? <CircularProgress color="secondary" /> :
+				(SingleSupplierTransactionState.loading === true || singleSupplierDetail.loading === true) ? <CircularProgress color="secondary" /> :
 					<>
 						<Box sx={{ flexGrow: 1, mb: 4 }}>
 							<AppBar position="static">
@@ -244,4 +258,4 @@ const SingleCustomerReport = () => {
 	)
 }
 
-export default SingleCustomerReport
+export default SingleSupplierReport

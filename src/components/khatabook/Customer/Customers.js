@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCustomers, getCustomerBalance } from '../../../actions/customerAction';
 import { handleLogout } from '../../../actions/userAction'
 import '../style.css'
-import { Button, Card, CardContent, Divider, Box, Typography, Grid, Paper } from '@mui/material';
+import { Button, Card, CardContent, Divider, Box, Typography, Grid } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import generatePDF from './customerReport';
 // import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
@@ -76,13 +76,13 @@ const Customers = () => {
 					<>
 						<Grid container sx={{ marginTop: "1vw" }}  >
 
-							<Grid item xs={9} sx={{ overflowY: "auto", maxHeight: "90vh", backgroundColor: "#efefef" }}>
+							<Grid item xs={9} sx={{ overflowY: "auto", maxHeight: "90vh", backgroundColor: "#fbf7f8" }}>
 								<Box sx={{ height: "10vh", margin: "0px 14px", marginTop: "16px", marginBottom: "8px", display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between' }} >
 									<Box sx={{ display: 'flex', flexDirection: "row", marginLeft: "8px" }}>
 										<Typography variant="body1" sx={{ fontSize: "16px", fontWeight: "500" }}>
 											Customers
 										</Typography>
-										<Typography variant="body1" sx={{ fontSize: "14px", fontWeight: "400" }}>
+										<Typography variant="body1" sx={{ fontSize: "16px", fontWeight: "400" }}>
 											({customers.length})
 										</Typography>
 									</Box>
@@ -109,9 +109,9 @@ const Customers = () => {
 											Net Balance
 										</Typography>
 										<Box sx={{ mb: "2rem" }}>
-											<Typography sx={{ fontSize: 24, fontWeight: "bold", color: `${netBalance >= 0 ? "#C82128" : "0F814D"}` }}>
+											<Typography sx={{ fontSize: 24, fontWeight: "bold", color: `${netBalance >= 0 ? "#C82128" : "#0F814D"}` }}>
 												<CurrencyRupeeIcon sx={{ fontSize: 24, fontWeight: "bold" }} />
-												{netBalance}
+												{Math.abs(netBalance)}
 											</Typography>
 											<Typography color="text.secondary" gutterBottom variant="body1" sx={{ display: 'inline' }}>
 												{netBalance >= 0 ? "You'll Get" : "You'll Give"}

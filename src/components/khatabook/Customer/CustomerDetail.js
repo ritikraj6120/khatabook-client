@@ -33,7 +33,7 @@ const CustomerDetail = (props) => {
 		if (result[0])
 			x = (result[0].amounttoget - result[0].amounttogive);
 	}
-	const [credentials, setCredentials] = useState({ etitle: "", ename: "" })
+	const [credentials, setCredentials] = useState({  ename: "" })
 	const ref = useRef(null)
 	const refClose = useRef(null)
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -59,16 +59,18 @@ const CustomerDetail = (props) => {
 	}
 
 	const youGaveAddPage = (e) => {
+		e.preventDefault();
 		history.push('/addNewTransactionForCustomerGave');
 	}
 
 	const youGetAddPage = (e) => {
+		e.preventDefault();
 		history.push('/addNewTransactionForCustomerGet');
 	}
 
 	const handleUpdate = (e) => {
 		e.preventDefault();
-		const { etitle, ename } = credentials;
+		const {  ename } = credentials;
 		if (ename.length < 1) {
 			console.log(ename.length);
 			notifyWarning("Customer name less than 1");
@@ -84,7 +86,7 @@ const CustomerDetail = (props) => {
 			notifyWarning("Enter valid phone Number");
 		}
 		else {
-			dispatch(editCustomer(singleCustomer._id, etitle, ename, phone));
+			dispatch(editCustomer(singleCustomer._id,ename, phone));
 			// singleCustomer = { ...singleCustomer, title: etitle, name: ename, phone: phone };
 			refClose.current.click();
 			// window.location.reload();
@@ -93,7 +95,7 @@ const CustomerDetail = (props) => {
 	const updateCustomerProfile = () => {
 		setAnchorEl(null);
 		ref.current.click();
-		setCredentials({ etitle: singleCustomer.title, ename: singleCustomer.name })
+		setCredentials({  ename: singleCustomer.name })
 		setPhone(singleCustomer.phone);
 	}
 
@@ -141,10 +143,6 @@ const CustomerDetail = (props) => {
 						</div>
 						<div className="modal-body">
 							<form className="my-3"  >
-								<div className="mb-3">
-									<label htmlFor="title" className="form-label">Title</label>
-									<input type="text" className="form-control" id="title" name="etitle" value={credentials.etitle} aria-describedby="emailHelp" onChange={onChange} minLength={1} required />
-								</div>
 								<div className="mb-3">
 									<label htmlFor="name" className="form-label">Name</label>
 									<input type="text" className="form-control" id="name" name="ename" value={credentials.ename} onChange={onChange} minLength={1} required />

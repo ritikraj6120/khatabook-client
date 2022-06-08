@@ -19,6 +19,18 @@ import {
 	getSingleCustomerDetailReducer,
 } from './customerReducer'
 
+import{
+	addSupplierReducer,
+	getSuppliersReducer,
+	editSupplierReducer,
+	deleteSupplierReducer,
+	singleSupplierTransactionsReducer,
+	addSingleSupplierTransactionReducer,
+	updateSupplierTransactionReducer,
+	getSupplierBalanceReducer,
+	getSingleSupplierDetailReducer,
+}from './supplierReducer'
+
 const rootReducer = combineReducers({
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
@@ -33,6 +45,18 @@ const rootReducer = combineReducers({
 	updateCustomerTransaction: updateCustomerTransactionReducer,
 	getCustomerBalance: getCustomerBalanceReducer,
 	SingleCustomerDetail: getSingleCustomerDetailReducer,
+
+
+	
+	getSuppliers: getSuppliersReducer,
+	addSupplier: addSupplierReducer,
+	editSupplier: editSupplierReducer,
+	deleteSupplier: deleteSupplierReducer,
+	singleSupplierTransactions: singleSupplierTransactionsReducer,
+	addSingleSupplierTransaction: addSingleSupplierTransactionReducer,
+	updateSupplierTransaction: updateSupplierTransactionReducer,
+	getSupplierBalance: getSupplierBalanceReducer,
+	SingleSupplierDetail: getSingleSupplierDetailReducer,
 });
 
 export default rootReducer;

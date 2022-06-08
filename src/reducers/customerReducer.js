@@ -64,12 +64,11 @@ export const getCustomersReducer = (state = { loading: true, customers: [], erro
 			};
 
 		case CUSTOMER_UPDATE_SUCCESS:
-			let { id, title, name, phone } = action.payload
+			let { id,  name, phone } = action.payload
 			let y = state.customers
 			for (let index = 0; index < y.length; index++) {
 				const element = y[index];
 				if (element._id === id) {
-					y[index].title = title;
 					y[index].name = name;
 					y[index].phone = phone;
 					break;

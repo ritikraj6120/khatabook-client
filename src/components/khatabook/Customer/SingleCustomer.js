@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSingleCustomerTransactions, getSingleCustomerDetail } from '../../../actions/customerAction'
-import { selectCustomerById } from '../../../reducers/customerReducer'
 import { handleLogout } from '../../../actions/userAction'
 import { useHistory, Link } from 'react-router-dom';
 import '../style.css';

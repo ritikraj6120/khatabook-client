@@ -3,7 +3,6 @@ import { ToastContainer } from 'react-toastify';
 import { BrowserRouter as Router } from "react-router-dom";
 import UserState from './context/UserState';
 import NoteState from './context/NoteState';
-import SupplierState from './context/SupplierState';
 import Navbar from './components/Navbar';
 import KhataBookRouterapp from './AllRoutes';
 const App = () => {
@@ -11,14 +10,12 @@ const App = () => {
 		<Router>
 			<UserState>
 				<NoteState>
-					<SupplierState>
 						<Navbar />
 						{/* <Alert /> */}
 						<ToastContainer />
 						{/* <div className="container"> */}
 						<KhataBookRouterapp />
 						{/* </div> */}
-					</SupplierState>
 				</NoteState>
 			</UserState>
 		</Router>

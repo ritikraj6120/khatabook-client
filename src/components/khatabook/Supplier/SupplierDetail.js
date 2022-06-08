@@ -1,9 +1,10 @@
-import React, { useContext, useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { editSupplier, deleteSupplier, getSupplierBalance } from '../../../actions/supplierAction'
+import { handleLogout } from '../../../actions/userAction'
 import { useHistory, Link } from 'react-router-dom';
-import SupplierContext from '../../../context/SupplierContext'
 import { notifyWarning } from '../../../alert';
-import { Button, Typography, CardActions, CardContent, Card, Divider, Grid, Avatar, IconButton, MenuItem, Menu } from '@mui/material';
-
+import { Button, Typography, CardContent, Card, Divider, Grid, Avatar, IconButton, MenuItem, Menu } from '@mui/material';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -13,18 +14,26 @@ import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
 import { Box } from '@mui/system';
 import 'react-phone-number-input/style.css'
 import PhoneInput, { isPossiblePhoneNumber, isValidPhoneNumber } from 'react-phone-number-input'
+
+
 const SupplierDetail = (props) => {
-	let history = useHistory();
 	let { singleSupplier } = props;
-	console.log("gandmara");
-	console.log(singleSupplier.name);
-	const { editSupplier, deleteSupplier, supplierstate, SingleSupplierTransaction, getSupplierBalance } = useContext(SupplierContext);
-	const { supplierBalance } = supplierstate;
-	const result = supplierBalance.filter(item => item.supplier === singleSupplier._id);
+	let history = useHistory();
+	const dispatch = useDispatch();
+	const userLoginState = useSelector(state => state.userLogin)
+	const userLoginInfo = userLoginState.userInfo
+	const supplierBalanceState = useSelector(state => state.getSupplierBalance)
+	const singleSupplierTransactionsState = useSelector(state => state.singleSupplierTransactions)
+	const { SingleSupplierTransaction } = singleSupplierTransactionsState
+	const { supplierBalance } = supplierBalanceState;
 	let x = 0;
-	if (result[0])
-		x = (result[0].payment - result[0].purchase);
-	const [credentials, setCredentials] = useState({ etitle: "", ename: "" })
+	if (supplierBalanceState.loading === false) {
+		const result = supplierBalance.filter(item => item.supplier === singleSupplier._id);
+		if (result[0])
+			x = (result[0].payment - result[0].purchase);
+	}
+
+	const [credentials, setCredentials] = useState({  ename: "" })
 	const ref = useRef(null)
 	const refClose = useRef(null)
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -36,26 +45,37 @@ const SupplierDetail = (props) => {
 	// }, [singleSupplier]);
 
 	useEffect(() => {
-		getSupplierBalance();
-	}, [SingleSupplierTransaction]);
+		if (userLoginInfo !== null) {
+			dispatch(getSupplierBalance());
+		}
+		else {
+			dispatch(handleLogout(history));
+		}
+	}, [userLoginInfo, SingleSupplierTransaction])
+
 
 	const onChange = (e) => {
 		setCredentials({ ...credentials, [e.target.name]: e.target.value })
 	}
 	const newPurchaseAddPage = (e) => {
+		e.preventDefault();
 		history.push('/addNewTransactionForSupplierPurchase');
 	}
 
 	const newPaymentAddPage = (e) => {
+		e.preventDefault();
 		history.push('/addNewTransactionForSupplierPayment');
 	}
 
-	const handleUpdate = async (e) => {
+	const handleUpdate = (e) => {
 		e.preventDefault();
-		const { etitle, ename } = credentials;
+		const {  ename } = credentials;
 		if (ename.length < 1) {
 			console.log(ename.length);
 			notifyWarning("Supplier name less than 1");
+		}
+		else if (phone === null || phone === undefined) {
+			notifyWarning("Phone Number can not be empty");
 		}
 		else if (isPossiblePhoneNumber(phone) === false) {
 			console.log(phone);
@@ -65,17 +85,17 @@ const SupplierDetail = (props) => {
 			notifyWarning("Enter valid phone Number");
 		}
 		else {
-			await editSupplier(singleSupplier._id, etitle, ename, phone);
-			singleSupplier = { ...singleSupplier, title: etitle, name: ename, phone: phone };
+			dispatch(editSupplier(singleSupplier._id, ename, phone));
+			// singleSupplier = { ...singleSupplier, title: etitle, name: ename, phone: phone };
 			refClose.current.click();
-			window.location.reload();
+			// window.location.reload();
 		}
 	}
 
 	const updateSupplierProfile = () => {
 		setAnchorEl(null);
 		ref.current.click();
-		setCredentials({ etitle: singleSupplier.title, ename: singleSupplier.name })
+		setCredentials({  ename: singleSupplier.name })
 		setPhone(singleSupplier.phone);
 	}
 
@@ -87,9 +107,10 @@ const SupplierDetail = (props) => {
 		setAnchorEl(null);
 	};
 
-	const handleDelete = async (e) => {
+	const handleDelete = (e) => {
 		e.preventDefault();
-		await deleteSupplier(singleSupplier._id);
+		dispatch(deleteSupplier(singleSupplier._id,history));
+		localStorage.removeItem('SingleSupplierId');
 	}
 
 	const stringAvatar = (name) => {
@@ -118,10 +139,10 @@ const SupplierDetail = (props) => {
 						</div>
 						<div className="modal-body">
 							<form className="my-3"  >
-								<div className="mb-3">
+								{/* <div className="mb-3">
 									<label htmlFor="title" className="form-label">Title</label>
 									<input type="text" className="form-control" id="etitle" name="etitle" value={credentials.etitle} aria-describedby="emailHelp" onChange={onChange} minLength={1} required />
-								</div>
+								</div> */}
 								<div className="mb-3">
 									<label htmlFor="description" className="form-label">Name</label>
 									<input type="text" className="form-control" id="ename" name="ename" value={credentials.ename} onChange={onChange} minLength={1} required />
